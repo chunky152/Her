@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  sanity-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate HTML
+        run: npx --yes html-validate@8 index.html
+
+      - name: Check local asset references exist
+        run: |
+          set -e
+          missing=0
+          refs=$(grep -oE '(href|src)="[^"]+"' index.html | sed -E 's/^(href|src)="//; s/"$//')
+          while IFS= read -r ref; do
+            case "$ref" in
+              http://*|https://*|"#"*|mailto:*|data:*|"") continue ;;
+              photos/*) continue ;; # real photos are added later; see photo-slot-filenames check below
+            esac
+            if [ ! -f "$ref" ]; then
+              echo "::error::index.html references missing local file: $ref"
+              missing=1
+            fi
+          done <<< "$refs"
+          exit $missing
+
+      - name: Check photo-slot filenames match README
+        run: |
+          set -e
+          missing=0
+          html_refs=$(grep -oE 'src="photos/[^"]+"' index.html | sed -E 's/^src="//; s/"$//' | sort -u)
+          readme_refs=$(grep -oE 'photos/[A-Za-z0-9_.-]+\.jpg' README.md | sort -u)
+          if [ "$html_refs" != "$readme_refs" ]; then
+            echo "::error::photos/ filenames referenced in index.html and documented in README.md are out of sync"
+            echo "In index.html:"; echo "$html_refs"
+            echo "In README.md:"; echo "$readme_refs"
+            missing=1
+          fi
+          exit $missing
+
+      - name: Smoke test — serve and load page
+        run: |
+          set -e
+          python3 -m http.server 8080 >/dev/null 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for i in $(seq 1 10); do
+            curl -sf http://localhost:8080/index.html >/dev/null && break
+            sleep 1
+          done
+          status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/index.html)
+          [ "$status" = "200" ] || { echo "::error::index.html returned HTTP $status"; exit 1; }
+          curl -s http://localhost:8080/index.html | grep -q "<title>Happy Birthday, Daphine</title>" \
+            || { echo "::error::expected <title> not found in served page"; exit 1; }
+          curl -sf -o /dev/null http://localhost:8080/style.css || { echo "::error::style.css did not load"; exit 1; }
+          curl -sf -o /dev/null http://localhost:8080/script.js || { echo "::error::script.js did not load"; exit 1; }
