@@ -140,6 +140,13 @@
     }
   }
 
+  /* ================= Polaroid photo slots ================= */
+  document.querySelectorAll('.polaroid-photo img').forEach(function(img){
+    img.addEventListener('error', function(){
+      img.closest('.polaroid').classList.add('no-photo');
+    });
+  });
+
   /* ================= Scroll reveals ================= */
   var revealEls = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
