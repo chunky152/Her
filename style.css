@@ -243,13 +243,11 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 }
 
 /* ================= Reasons ================= */
-.reasons-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:2rem; }
-.reasons-grid > *:last-child{ grid-column:1 / -1; max-width:calc(50% - .5rem); margin:0 auto; }
+.reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
+.flip-card{ flex:0 1 calc(50% - .5rem); perspective:1000px; min-height:150px; }
 @media (min-width:700px){
-  .reasons-grid{ grid-template-columns:repeat(5,1fr); }
-  .reasons-grid > *:last-child{ grid-column:auto; max-width:none; margin:0; }
+  .flip-card{ flex-basis:calc(20% - .8rem); }
 }
-.flip-card{ perspective:1000px; min-height:150px; }
 .flip-card:nth-child(5n+1){ --tilt:-3deg; }
 .flip-card:nth-child(5n+2){ --tilt:2.5deg; }
 .flip-card:nth-child(5n+3){ --tilt:-2deg; }
