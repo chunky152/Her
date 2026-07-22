@@ -367,3 +367,42 @@ body.reduced-motion .final-line{ transform:none; }
   position:relative; z-index:2; transition:opacity .3s ease;
 }
 .btn-primary:disabled{ opacity:.6; }
+
+/* ================= Lottie motion graphics ================= */
+.lottie-envelope-burst{
+  position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+  width:280px; height:280px; max-width:none; pointer-events:none; z-index:5;
+}
+.lottie-heart{ width:42px; height:42px; margin:0 auto .9rem; }
+.lottie-reasons-hearts{ width:100%; max-width:240px; height:64px; margin:0 auto; pointer-events:none; }
+.lottie-quiz-check{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:130px; height:130px; pointer-events:none; z-index:6; opacity:0;
+}
+.lottie-quiz-check.show{ opacity:1; }
+.lottie-finale-burst{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(90vw,480px); height:min(90vw,480px); pointer-events:none; z-index:3;
+}
+body.reduced-motion .lottie-envelope-burst,
+body.reduced-motion .lottie-reasons-hearts,
+body.reduced-motion .lottie-finale-burst{ display:none; }
+
+/* ================= Funny Moments laugh emoji ================= */
+.laugh-emoji{ display:inline-block; animation:laugh-bounce 1.1s ease-in-out infinite; }
+@keyframes laugh-bounce{
+  0%,100%{ transform:translateY(0) rotate(-6deg); }
+  50%{ transform:translateY(-5px) rotate(6deg); }
+}
+body.reduced-motion .laugh-emoji{ animation:none; }
+
+/* ================= Quiz wrong-answer shake ================= */
+@keyframes quiz-shake{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-6px); }
+  40%{ transform:translateX(6px); }
+  60%{ transform:translateX(-4px); }
+  80%{ transform:translateX(4px); }
+}
+.quiz-option.shake{ animation:quiz-shake .45s ease; }
+body.reduced-motion .quiz-option.shake{ animation:none; }

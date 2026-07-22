@@ -16,6 +16,10 @@
 <!-- Drop your track in as audio/background-music.mp3 (see README) -->
 <audio id="bgMusic" src="audio/background-music.mp3" loop preload="auto"></audio>
 
+<!-- ============ Envelope open sound effect ============ -->
+<!-- Drop a short paper/envelope-opening sound in as audio/envelope-open.mp3 (see README) -->
+<audio id="envelopeSound" src="audio/envelope-open.mp3" preload="auto"></audio>
+
 <!-- ============ Mute button (always visible) ============ -->
 <button id="muteBtn" class="mute-btn" aria-label="Mute music">&#128266;</button>
 
@@ -26,6 +30,7 @@
       <div class="envelope-body"></div>
       <div class="wax-seal">&#10084;</div>
       <div class="envelope-flap"></div>
+      <div id="lottieEnvelope" class="lottie-envelope-burst" aria-hidden="true"></div>
     </div>
     <p class="envelope-cta">A little something for you — tap to open.</p>
   </button>
@@ -46,11 +51,12 @@
 <section class="section" id="letter">
   <p class="eyebrow reveal">A Letter For You 💌</p>
   <div class="card letter-text reveal">
-    <p>I never thought our relationship would last this long, and yet here we are — still growing and learning to truly love each other. You gave me plenty of reasons to let you go, but amid all of that, I found one reason that changed my mind: your love for God.</p>
+    <p>I never thought our relationship would last this long, and yet here we are — still growing, still learning to truly love each other. We've had our hard moments, the kind that could've pulled two people apart, but there was one thing about you that kept pulling me back in: your love for God, my Amahle.</p>
     <p>I still remember the very first time we prayed together — it was exciting. From that day, I told myself, "I want to do life with this girl." The first time I looked into your eyes, I saw someone who shared the same goals as me, and you proved it with your own words.</p>
-    <p>I love every time I get to hear your voice, because that warm, gentle voice gives me so much hope and excitement that there is someone who loves me as much as I love her. I pray that both our dreams and goals come true.</p>
-    <p>I love you so much, Amahle.</p>
-    <p class="letter-sign">— Muwanguzi Alvin Kiggundu</p>
+    <p>I love every time I get to hear your voice, because that warm, gentle voice gives me so much hope and excitement that you love me as much as I love you. I pray that both our dreams and goals come true.</p>
+    <div id="lottieHeart" class="lottie-heart" aria-hidden="true"></div>
+    <p>I love you so much, my Amahle.</p>
+    <p class="letter-sign">— Alvin</p>
   </div>
 </section>
 
@@ -87,7 +93,7 @@
 
     <div class="milestone reveal">
       <p class="milestone-date">January 2026</p>
-      <h3 class="milestone-title">Funny Moments</h3>
+      <h3 class="milestone-title">Funny Moments <span class="laugh-emoji" aria-hidden="true">😂</span></h3>
       <p class="milestone-text">You'd send me videos of yourself dancing 💃, and every single time, I couldn't stop laughing. You have a way of making me happy without even trying.</p>
       <div class="polaroid-group">
         <div class="polaroid video-polaroid">
@@ -153,6 +159,7 @@
 <!-- ============ Reasons ============ -->
 <section class="section section-center" id="reasons">
   <p class="eyebrow reveal">5 Reasons ✨</p>
+  <div id="lottieReasonsHearts" class="lottie-reasons-hearts" aria-hidden="true"></div>
   <div class="reasons-grid" id="reasonsGrid"></div>
 </section>
 
@@ -161,12 +168,14 @@
   <p class="eyebrow reveal">A Little Game 🎀</p>
   <div class="card reveal" id="quizCard" style="position:relative;">
     <div id="quizStage"></div>
+    <div id="lottieQuizCheck" class="lottie-quiz-check" aria-hidden="true"></div>
   </div>
 </section>
 
 <!-- ============ Finale ============ -->
 <section id="finale">
   <div id="petalsFinale" class="petals-layer" aria-hidden="true"></div>
+  <div id="lottieFinaleBurst" class="lottie-finale-burst" aria-hidden="true"></div>
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
   <h2 class="finale-title">Happy Birthday,<span class="name">Wamala Daphine 🎀</span></h2>
   <p class="finale-hope">May this year give you twice the joy you've given me. May you be healthy, wealthy, and wise, and may your family stay together for eternity 🥳💃</p>
@@ -174,6 +183,7 @@
   <p class="final-line" id="finalLine">Now go give your Mother and your Father a hug and tell them that you love them so much.</p>
 </section>
 
+<script src="vendor/lottie.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
