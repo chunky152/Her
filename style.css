@@ -242,6 +242,15 @@ body.reduced-motion .scroll-cue span{ animation:none; }
   color:var(--mauve); text-align:center; line-height:1;
 }
 
+/* ---------- Polaroid group (multiple videos/photos per milestone) ---------- */
+.polaroid-group{ display:flex; flex-wrap:wrap; gap:1.1rem; margin-top:1.25rem; }
+.polaroid-group .polaroid{ margin-top:0; max-width:200px; }
+.polaroid-group .polaroid:nth-child(3n+1){ --tilt:-3deg; }
+.polaroid-group .polaroid:nth-child(3n+2){ --tilt:2.5deg; }
+.polaroid-group .polaroid:nth-child(3n+3){ --tilt:-2deg; }
+.polaroid-photo video{ width:100%; height:100%; object-fit:cover; display:block; }
+.polaroid.no-photo .polaroid-photo video{ display:none; }
+
 /* ================= Reasons ================= */
 .reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
 .flip-card{ flex:0 1 calc(50% - .5rem); perspective:1000px; min-height:150px; }
