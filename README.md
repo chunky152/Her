@@ -7,7 +7,7 @@ Live structure: **HTML / CSS / vanilla JS only** — no build step, no dependenc
 ## Features
 
 - **Envelope opener** — a wax-seal envelope overlay that opens on tap and starts the background music.
-- **Original background music** — a music-box loop generated in-browser with the Web Audio API (no audio file).
+- **Background music** — a single track that plays through every section (see [Adding your own music](#adding-your-own-music)).
 - **Falling petals** on the hero section.
 - **A letter** to Daphine.
 - **Our Story** — a timeline of milestones, each with a tilted polaroid photo slot (see [Adding real photos](#adding-real-photos)).
@@ -23,6 +23,7 @@ index.html    Page markup
 style.css     All styling
 script.js     All behavior (envelope, music, reveals, flip cards, quiz, confetti)
 photos/       Drop real photos here for the "Our Story" polaroids
+audio/        Drop your background-music.mp3 here
 ```
 
 ## Running locally
@@ -48,6 +49,10 @@ Each milestone in "Our Story" has a polaroid slot wired to an image file that do
 | `photos/story-5-birthday.jpg` | Today: Your Birthday |
 
 If a file is missing, that slot shows a styled placeholder instead of a broken image, so the page never looks broken while you're still collecting photos.
+
+## Adding your own music
+
+Drop a single track in as `audio/background-music.mp3` and it plays automatically, looping through every section — no code changes needed. It starts when the envelope is tapped open (browsers require a user gesture before audio can play) and can be muted with the speaker button in the top corner. If the file is missing, the page just plays silently rather than breaking.
 
 ## Customizing content
 

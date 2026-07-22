@@ -131,12 +131,12 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
   text-align:center; overflow:hidden; padding:2rem 1.25rem;
   background:radial-gradient(circle at 50% 20%, var(--soft-pink), var(--blush) 65%);
 }
-#petals{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+#petals, .petals-layer{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
 .petal{
-  position:absolute; top:-8%;
-  border-radius:0 100% 0 100%;
-  background:linear-gradient(135deg, var(--soft-pink), var(--rose-gold));
-  opacity:.75; pointer-events:none; will-change:transform;
+  position:absolute; top:-8%; left:0;
+  line-height:1; user-select:none;
+  filter:drop-shadow(0 2px 4px rgba(92,58,62,.28));
+  opacity:.85; pointer-events:none; will-change:transform;
   animation-name:petal-fall; animation-timing-function:linear; animation-iteration-count:infinite;
 }
 @keyframes petal-fall{

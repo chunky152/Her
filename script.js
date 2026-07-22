@@ -34,110 +34,48 @@
     applyMute();
   });
 
-  /* ================= Background music (Web Audio, original music-box loop) ================= */
-  var audioCtx = null, masterGain = null, isPlaying = false;
-  var notes = [261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25]; // C D E G A C D E
-  var pattern = [0,2,4,5,4,2,1,0,2,3,4,3,1,0];
-  var noteLength = 0.62;
-  var patternIndex = 0;
-  var nextNoteTime = 0;
-  var schedulerTimer = null;
+  /* ================= Background music (single audio file, plays through every section) =================
+     Drop your track in as audio/background-music.mp3 (see README) — this just wires up
+     the <audio id="bgMusic"> element in the page and controls it via the mute button. */
+  var bgMusic = document.getElementById('bgMusic');
+  var isPlaying = false;
+  bgMusic.volume = 0.55;
 
   function applyMute(){
-    if(!masterGain || !audioCtx) return;
-    var target = muted ? 0 : 0.16;
-    masterGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.08);
-  }
-
-  function initAudio(){
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if(!AC) return;
-    audioCtx = new AC();
-
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = muted ? 0 : 0.16;
-
-    var toneFilter = audioCtx.createBiquadFilter();
-    toneFilter.type = 'lowpass';
-    toneFilter.frequency.value = 2200;
-    toneFilter.Q.value = 0.4;
-
-    var delay = audioCtx.createDelay(1.0);
-    delay.delayTime.value = 0.34;
-    var feedback = audioCtx.createGain();
-    feedback.gain.value = 0.22;
-    var delayWet = audioCtx.createGain();
-    delayWet.gain.value = 0.35;
-
-    toneFilter.connect(masterGain);
-    toneFilter.connect(delay);
-    delay.connect(feedback);
-    feedback.connect(delay);
-    delay.connect(delayWet);
-    delayWet.connect(masterGain);
-
-    masterGain.connect(audioCtx.destination);
-
-    audioCtx._toneFilter = toneFilter;
-  }
-
-  function playNote(freq, time){
-    var osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-
-    var noteGain = audioCtx.createGain();
-    noteGain.gain.setValueAtTime(0.0001, time);
-    noteGain.gain.linearRampToValueAtTime(0.9, time + 0.015);
-    noteGain.gain.exponentialRampToValueAtTime(0.001, time + 0.85);
-
-    osc.connect(noteGain);
-    noteGain.connect(audioCtx._toneFilter);
-
-    osc.start(time);
-    osc.stop(time + 0.9);
-  }
-
-  function scheduler(){
-    while(nextNoteTime < audioCtx.currentTime + 0.15){
-      var freq = notes[pattern[patternIndex % pattern.length]];
-      playNote(freq, nextNoteTime);
-      nextNoteTime += noteLength;
-      patternIndex++;
-    }
-    schedulerTimer = setTimeout(scheduler, 40);
+    bgMusic.muted = muted;
   }
 
   function startMusic(){
     if(isPlaying) return;
     isPlaying = true;
-    if(!audioCtx){ initAudio(); }
-    if(!audioCtx) return;
-    if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
-    nextNoteTime = audioCtx.currentTime + 0.1;
-    scheduler();
+    var playPromise = bgMusic.play();
+    if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
   }
 
-  /* ================= Petals ================= */
+  /* ================= Petals (falling rose flowers) ================= */
   if(!reducedMotion){
-    var petalContainer = document.getElementById('petals');
-    var PETAL_COUNT = 12;
-    for(var i = 0; i < PETAL_COUNT; i++){
-      var petal = document.createElement('div');
-      petal.className = 'petal';
-      var size = 8 + Math.random() * 10;
-      var left = Math.random() * 100;
-      var duration = 16 + Math.random() * 14;
-      var delay = Math.random() * -20;
-      var drift = (Math.random() * 120 - 60) + 'px';
-      petal.style.left = left + '%';
-      petal.style.width = size + 'px';
-      petal.style.height = size + 'px';
-      petal.style.animationDuration = duration + 's';
-      petal.style.animationDelay = delay + 's';
-      petal.style.setProperty('--drift', drift);
-      petalContainer.appendChild(petal);
-    }
+    var PETAL_COUNT = 50;
+    ['petals', 'petalsFinale'].forEach(function(containerId){
+      var petalContainer = document.getElementById(containerId);
+      if(!petalContainer) return;
+      for(var i = 0; i < PETAL_COUNT; i++){
+        var petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.textContent = '🌹';
+        petal.setAttribute('aria-hidden', 'true');
+        var size = 16 + Math.random() * 14;
+        var left = Math.random() * 100;
+        var duration = 16 + Math.random() * 14;
+        var delay = Math.random() * -20;
+        var drift = (Math.random() * 120 - 60) + 'px';
+        petal.style.left = left + '%';
+        petal.style.fontSize = size + 'px';
+        petal.style.animationDuration = duration + 's';
+        petal.style.animationDelay = delay + 's';
+        petal.style.setProperty('--drift', drift);
+        petalContainer.appendChild(petal);
+      }
+    });
   }
 
   /* ================= Polaroid photo slots ================= */
