@@ -10,10 +10,24 @@
   var envelopeTrigger = document.getElementById('envelopeTrigger');
   document.body.classList.add('locked');
 
+  /* Play the envelope-open sound effect first, then start the background
+     music once it finishes (or immediately if the sound can't play). */
+  var envelopeSound = document.getElementById('envelopeSound');
+  var musicQueued = false;
+  function queueMusic(){
+    if(musicQueued) return;
+    musicQueued = true;
+    startMusic();
+  }
+  envelopeSound.addEventListener('ended', queueMusic);
+  envelopeSound.addEventListener('error', queueMusic);
+
   function openEnvelope(){
     if(envelope.classList.contains('opening')) return;
     envelope.classList.add('opening');
-    startMusic();
+    playLottieOnce('lottieEnvelope', 'animations/sparkle-burst.json');
+    var soundPromise = envelopeSound.play();
+    if(soundPromise && soundPromise.catch){ soundPromise.catch(queueMusic); }
     setTimeout(function(){
       overlay.classList.add('fade-out');
       document.body.classList.remove('locked');
@@ -43,6 +57,7 @@
 
   function applyMute(){
     bgMusic.muted = muted;
+    envelopeSound.muted = muted;
   }
 
   function startMusic(){
@@ -52,7 +67,50 @@
     if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
   }
 
-  /* ================= Petals (falling rose flowers) ================= */
+  /* ================= Lottie motion graphics =================
+     Small hand-built animations in animations/*.json, played via the
+     vendored lottie-web (vendor/lottie.min.js). Skipped entirely under
+     prefers-reduced-motion, matching the rest of the site's motion. */
+  var lottieReady = !reducedMotion && typeof lottie !== 'undefined';
+
+  function playLottieOnce(containerId, path){
+    if(!lottieReady) return;
+    var el = document.getElementById(containerId);
+    if(!el) return;
+    lottie.loadAnimation({
+      container: el,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: path
+    });
+  }
+
+  function mountLottieOnView(containerId, path){
+    if(!lottieReady) return;
+    var el = document.getElementById(containerId);
+    if(!el || !('IntersectionObserver' in window)) return;
+    var lottieIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          lottie.loadAnimation({
+            container: el,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: path
+          });
+          lottieIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    lottieIo.observe(el);
+  }
+
+  mountLottieOnView('lottieHeart', 'animations/heartbeat.json');
+  mountLottieOnView('lottieReasonsHearts', 'animations/floating-hearts.json');
+
+  /* ================= Petals (falling cherry blossoms) ================= */
   if(!reducedMotion){
     var PETAL_COUNT = 50;
     ['petals', 'petalsFinale'].forEach(function(containerId){
@@ -61,7 +119,7 @@
       for(var i = 0; i < PETAL_COUNT; i++){
         var petal = document.createElement('div');
         petal.className = 'petal';
-        petal.textContent = '🌹';
+        petal.textContent = '🌸';
         petal.setAttribute('aria-hidden', 'true');
         var size = 16 + Math.random() * 14;
         var left = Math.random() * 100;
@@ -93,8 +151,8 @@
   /* ================= Reasons: flip cards ================= */
   var reasons = [
     { icon: '🙏', text: "You love GOD so much, and that attracted me to you." },
-    { icon: '🌸', text: "You are very beautiful." },
-    { icon: '😊', text: "Your smile is amazing." },
+    { icon: '🌸', text: "You are very genuine and true to yourself." },
+    { icon: '😊', text: "You are very honest, loving, and caring to the people that you love." },
     { icon: '🫶', text: "You open up to me, and that makes me feel important in your life." },
     { icon: '🎁', text: "You make me feel appreciated for the little things I do for you." }
   ];
@@ -191,8 +249,8 @@
       q: "How many siblings do I have?",
       options: ["1", "20", "0", "11"],
       correct: 3,
-      right: "Eleven! You come from quite the crew.",
-      wrong: "Not quite — ask me again after a family gathering."
+      right: "Exacly! I come from quite the crew.",
+      wrong: "Not quite — Maybe you should ask me."
     },
     {
       q: "Where did we first meet?",
@@ -241,6 +299,22 @@
     }
   }
 
+  var quizCheckEl = document.getElementById('lottieQuizCheck');
+  var quizCheckAnim = null;
+  function playQuizCheck(){
+    if(!lottieReady || !quizCheckEl) return;
+    if(quizCheckAnim){ quizCheckAnim.destroy(); }
+    quizCheckEl.classList.add('show');
+    quizCheckAnim = lottie.loadAnimation({
+      container: quizCheckEl,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: 'animations/checkmark-success.json'
+    });
+    setTimeout(function(){ quizCheckEl.classList.remove('show'); }, 1700);
+  }
+
   function handleAnswer(i, buttons){
     var item = quizData[qIndex];
     var correct = i === item.correct;
@@ -250,13 +324,13 @@
       var bi = parseInt(b.getAttribute('data-i'), 10);
       b.disabled = true;
       if(bi === item.correct){ b.classList.add('correct'); }
-      else if(bi === i){ b.classList.add('wrong'); }
+      else if(bi === i){ b.classList.add('wrong'); if(!correct){ b.classList.add('shake'); } }
       else { b.classList.add('dim'); }
     });
 
     var feedback = stageInner.querySelector('.quiz-feedback');
     feedback.textContent = correct ? item.right : item.wrong;
-    if(correct){ heartBurst(); }
+    if(correct){ heartBurst(); playQuizCheck(); }
 
     var cont = document.createElement('button');
     cont.className = 'quiz-continue';
@@ -353,6 +427,7 @@
   var finalLine = document.getElementById('finalLine');
   lastThingBtn.addEventListener('click', function(){
     launchConfetti();
+    playLottieOnce('lottieFinaleBurst', 'animations/finale-burst.json');
     finalLine.classList.add('show');
     lastThingBtn.disabled = true;
   });
