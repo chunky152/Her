@@ -1,0 +1,12 @@
+{
+  "name": "her",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist && html-minifier-terser --collapse-whitespace --remove-comments --remove-redundant-attributes --use-short-doctype --minify-css true --minify-js true -o dist/index.html index.html && cleancss -o dist/style.css style.css && terser script.js -c -m -o dist/script.js && cp -r photos dist/photos && cp -r audio dist/audio"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.36.0"
+  }
+}

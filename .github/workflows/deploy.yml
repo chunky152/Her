@@ -25,9 +25,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+
+      - name: Install build dependencies
+        run: npm ci
 
       - name: Build minified site
-        run: ./build.sh
+        run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
