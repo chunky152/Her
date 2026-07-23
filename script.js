@@ -107,8 +107,54 @@
     lottieIo.observe(el);
   }
 
-  mountLottieOnView('lottieHeart', 'animations/heartbeat.json');
   mountLottieOnView('lottieReasonsHearts', 'animations/floating-hearts.json');
+
+  /* Letter heart: pulses ambiently, but cracks apart like a broken wax seal
+     when tapped, then reassembles back into the ambient pulse. */
+  (function(){
+    var el = document.getElementById('lottieHeart');
+    if(!el) return;
+    if(!lottieReady){
+      mountLottieOnView('lottieHeart', 'animations/heartbeat.json');
+      return;
+    }
+    var heartAnim = null;
+    var breaking = false;
+
+    function playPulse(){
+      if(heartAnim){ heartAnim.destroy(); }
+      heartAnim = lottie.loadAnimation({
+        container: el, renderer: 'svg', loop: true, autoplay: true,
+        path: 'animations/heartbeat.json'
+      });
+    }
+
+    function playBreak(){
+      if(breaking) return;
+      breaking = true;
+      if(heartAnim){ heartAnim.destroy(); }
+      heartAnim = lottie.loadAnimation({
+        container: el, renderer: 'svg', loop: false, autoplay: true,
+        path: 'animations/heart-break.json'
+      });
+      heartAnim.addEventListener('complete', function(){
+        breaking = false;
+        playPulse();
+      });
+    }
+
+    el.addEventListener('click', playBreak);
+
+    var heartIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          playPulse();
+          heartIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    heartIo.observe(el);
+  })();
 
   /* Unlike the decorative touches above, this is the only visual for the
      "Hard Moments" milestone — under reduced-motion, show a still frame

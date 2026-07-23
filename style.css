@@ -386,7 +386,12 @@ body.reduced-motion .final-line{ transform:none; }
   position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
   width:280px; height:280px; max-width:none; pointer-events:none; z-index:5;
 }
-.lottie-heart{ width:42px; height:42px; margin:0 auto .9rem; }
+.lottie-heart{
+  all:unset; display:block; width:52px; height:52px; margin:0 auto .9rem;
+  cursor:pointer; border-radius:50%;
+}
+.lottie-heart:focus-visible{ outline:3px solid var(--rose-gold-deep); outline-offset:4px; }
+.lottie-heart:active{ transform:scale(.92); }
 .lottie-reasons-hearts{ width:100%; max-width:240px; height:64px; margin:0 auto; pointer-events:none; }
 .lottie-quiz-check{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
