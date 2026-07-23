@@ -45,14 +45,23 @@ a{ color:inherit; }
 }
 .eyebrow::before,.eyebrow::after{ content:''; flex:0 0 26px; height:1px; background:var(--rose-gold); opacity:.5; }
 
-/* ---------- Layout helpers ---------- */
-.section{ position:relative; padding:5rem 1.25rem; max-width:600px; margin:0 auto; }
+/* ---------- Layout helpers ----------
+   Sections are full-width (not max-width+margin:auto) so each can carry its
+   own edge-to-edge background; the calc() padding centers the same content
+   column the old max-width did. */
+.section{
+  position:relative; width:100%;
+  padding:5rem calc(max(0px, (100% - 600px) / 2) + 1.25rem);
+}
 .section-center{ text-align:center; }
 @media (min-width:700px){
-  .section{ max-width:760px; padding:7rem 2rem; }
+  .section{ padding:7rem calc(max(0px, (100% - 760px) / 2) + 2rem); }
 }
 @media (min-width:1100px){
-  .section{ max-width:880px; }
+  .section{
+    padding-left:calc(max(0px, (100% - 880px) / 2) + 2rem);
+    padding-right:calc(max(0px, (100% - 880px) / 2) + 2rem);
+  }
 }
 
 .card{
@@ -185,6 +194,7 @@ body.reduced-motion .petal{ display:none; }
 body.reduced-motion .scroll-cue span{ animation:none; }
 
 /* ================= Letter ================= */
+#letter{ background:linear-gradient(180deg, var(--blush), var(--cream)); }
 .letter-text p{ margin:0 0 1.1rem; font-size:1.02rem; }
 .letter-text{ font-size:1.02rem; color:var(--mauve); }
 .letter-sign{
@@ -193,6 +203,7 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 }
 
 /* ================= Timeline ================= */
+#story{ background:linear-gradient(180deg, var(--cream), var(--soft-pink)); }
 .timeline{ position:relative; padding-left:1.9rem; margin-top:2rem; }
 .timeline::before{
   content:''; position:absolute; left:.35rem; top:.3rem; bottom:.3rem; width:2px;
@@ -268,6 +279,7 @@ body.reduced-motion .milestone-accent{ display:none; }
 .polaroid.no-photo .polaroid-photo video{ display:none; }
 
 /* ================= Reasons ================= */
+#reasons{ background:linear-gradient(180deg, var(--soft-pink), var(--cream)); }
 .reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
 .flip-card{ flex:0 1 calc(50% - .5rem); perspective:1000px; min-height:150px; }
 @media (min-width:700px){
@@ -327,6 +339,7 @@ body.reduced-motion .flip-card.flipped .flip-front{ opacity:0; }
 body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
 
 /* ================= Quiz ================= */
+#quiz{ background:linear-gradient(180deg, var(--cream), var(--soft-pink)); }
 .quiz-progress{ font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rose-gold-text); margin-bottom:.75rem; text-align:center; }
 .quiz-question{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; text-align:center; margin:0 0 1.5rem; }
 .quiz-options{ display:flex; flex-direction:column; gap:.7rem; }
