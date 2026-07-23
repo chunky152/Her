@@ -51,6 +51,9 @@ a{ color:inherit; }
 @media (min-width:700px){
   .section{ max-width:760px; padding:7rem 2rem; }
 }
+@media (min-width:1100px){
+  .section{ max-width:880px; }
+}
 
 .card{
   background:var(--cream);
@@ -222,6 +225,10 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 .milestone:nth-child(odd) .polaroid{ --tilt:-3deg; }
 .milestone:nth-child(even) .polaroid{ --tilt:2.5deg; }
 .polaroid:hover{ transform:rotate(0deg) scale(1.035); box-shadow:0 22px 42px -18px rgba(92,58,62,.55); }
+@media (min-width:1100px){
+  .polaroid{ max-width:310px; }
+  .polaroid-group .polaroid{ max-width:230px; }
+}
 .polaroid::before{
   content:''; position:absolute; top:-14px; left:50%; margin-left:-32px;
   width:64px; height:24px; transform:rotate(-3deg);
@@ -336,16 +343,6 @@ body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
 }
 .quiz-result-score{ font-family:var(--font-display); font-size:2.2rem; font-weight:700; color:var(--rose-gold); margin:0; }
 .quiz-result-msg{ margin-top:.75rem; font-size:1.02rem; }
-.heart-pop{
-  position:absolute; pointer-events:none; font-size:1.2rem; color:var(--rose-gold);
-  animation:heart-rise 1.1s ease-out forwards;
-}
-@keyframes heart-rise{
-  0%{ transform:translateY(0) scale(.6); opacity:1; }
-  100%{ transform:translateY(-60px) scale(1.1); opacity:0; }
-}
-body.reduced-motion .heart-pop{ animation:heart-fade .9s ease-out forwards; }
-@keyframes heart-fade{ 0%{ opacity:1; } 100%{ opacity:0; } }
 
 /* ================= Finale ================= */
 #finale{
