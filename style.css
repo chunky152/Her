@@ -240,6 +240,7 @@ body.reduced-motion .scroll-cue span{ animation:none; }
   background:radial-gradient(circle at 30% 20%, #ffffff, var(--soft-pink) 55%, var(--rose-gold) 150%);
 }
 .polaroid-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+.lottie-hard-moments{ width:100%; height:100%; }
 .polaroid-placeholder{
   display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center;
   gap:.35rem; text-align:center; padding:.75rem;
