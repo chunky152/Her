@@ -112,10 +112,13 @@
 
   /* ================= Petals (falling cherry blossoms) ================= */
   if(!reducedMotion){
-    var PETAL_COUNT = 50;
-    ['petals', 'petalsFinale'].forEach(function(containerId){
+    /* Finale already layers confetti + a Lottie heart burst on click, so it
+       gets a lighter petal count — kept as ambient background, not the focal effect. */
+    var petalCounts = { petals: 50, petalsFinale: 18 };
+    Object.keys(petalCounts).forEach(function(containerId){
       var petalContainer = document.getElementById(containerId);
       if(!petalContainer) return;
+      var PETAL_COUNT = petalCounts[containerId];
       for(var i = 0; i < PETAL_COUNT; i++){
         var petal = document.createElement('div');
         petal.className = 'petal';
@@ -261,7 +264,6 @@
     }
   ];
 
-  var quizStage = document.getElementById('quizCard');
   var stageInner = document.getElementById('quizStage');
   var qIndex = 0, score = 0;
 
@@ -280,23 +282,6 @@
     buttons.forEach(function(b){
       b.addEventListener('click', function(){ handleAnswer(parseInt(b.getAttribute('data-i'), 10), buttons); });
     });
-  }
-
-  function heartBurst(){
-    var count = reducedMotion ? 3 : 6;
-    var rect = quizStage.getBoundingClientRect();
-    for(var i = 0; i < count; i++){
-      var h = document.createElement('span');
-      h.className = 'heart-pop';
-      h.innerHTML = '&#10084;';
-      h.style.left = (30 + Math.random() * 40) + '%';
-      h.style.top = '55%';
-      h.style.animationDelay = (Math.random() * 0.15) + 's';
-      quizStage.appendChild(h);
-      (function(el){
-        setTimeout(function(){ el.remove(); }, 1300);
-      })(h);
-    }
   }
 
   var quizCheckEl = document.getElementById('lottieQuizCheck');
@@ -330,7 +315,7 @@
 
     var feedback = stageInner.querySelector('.quiz-feedback');
     feedback.textContent = correct ? item.right : item.wrong;
-    if(correct){ heartBurst(); playQuizCheck(); }
+    if(correct){ playQuizCheck(); }
 
     var cont = document.createElement('button');
     cont.className = 'quiz-continue';
