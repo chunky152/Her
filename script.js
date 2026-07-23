@@ -110,6 +110,23 @@
   mountLottieOnView('lottieHeart', 'animations/heartbeat.json');
   mountLottieOnView('lottieReasonsHearts', 'animations/floating-hearts.json');
 
+  /* Unlike the decorative touches above, this is the only visual for the
+     "Hard Moments" milestone — under reduced-motion, show a still frame
+     instead of leaving that polaroid empty. */
+  (function(){
+    var el = document.getElementById('lottieHardMoments');
+    if(!el || typeof lottie === 'undefined') return;
+    if(reducedMotion){
+      var anim = lottie.loadAnimation({
+        container: el, renderer: 'svg', loop: false, autoplay: false,
+        path: 'animations/hard-moments-growth.json'
+      });
+      anim.addEventListener('DOMLoaded', function(){ anim.goToAndStop(anim.totalFrames - 1, true); });
+    } else {
+      mountLottieOnView('lottieHardMoments', 'animations/hard-moments-growth.json');
+    }
+  })();
+
   /* ================= Petals (falling cherry blossoms) ================= */
   if(!reducedMotion){
     /* Finale already layers confetti + a Lottie heart burst on click, so it
