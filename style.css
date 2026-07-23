@@ -5,6 +5,12 @@
   --gold:#D9A87E;
   --cream:#FFFAF7;
   --mauve:#5C3A3E;
+  /* Darker, text-safe variants of rose-gold/gold — the base colors read fine as
+     borders, backgrounds and decorative accents, but fail WCAG AA contrast when
+     used as small/body text on light backgrounds, or as a base for white text. */
+  --rose-gold-text:#934954;
+  --rose-gold-deep:#753A43;
+  --gold-deep:#9F632F;
   --font-display:'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body:'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --font-hand:'Caveat', 'Segoe Script', cursive;
@@ -35,7 +41,7 @@ a{ color:inherit; }
 .eyebrow{
   display:flex; align-items:center; justify-content:center; gap:.7rem;
   font-size:.72rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--rose-gold); margin:0 0 1rem;
+  color:var(--rose-gold-text); margin:0 0 1rem;
 }
 .eyebrow::before,.eyebrow::after{ content:''; flex:0 0 26px; height:1px; background:var(--rose-gold); opacity:.5; }
 
@@ -165,7 +171,7 @@ body.reduced-motion .petal{ display:none; }
 .scroll-cue{
   position:absolute; left:50%; bottom:1.8rem; transform:translateX(-50%);
   display:flex; flex-direction:column; align-items:center; gap:.3rem;
-  color:var(--rose-gold); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--rose-gold-text); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase;
   z-index:2;
 }
 .scroll-cue span{
@@ -180,7 +186,7 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 .letter-text{ font-size:1.02rem; color:var(--mauve); }
 .letter-sign{
   text-align:right; font-family:var(--font-display); font-style:italic; font-weight:600;
-  margin-top:1.5rem; color:var(--rose-gold); font-size:1.05rem;
+  margin-top:1.5rem; color:var(--rose-gold-text); font-size:1.05rem;
 }
 
 /* ================= Timeline ================= */
@@ -196,7 +202,7 @@ body.reduced-motion .scroll-cue span{ animation:none; }
   background:var(--rose-gold); box-shadow:0 0 0 4px var(--blush), 0 0 0 5px rgba(183,110,121,.35);
 }
 .milestone-date{
-  font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--rose-gold);
+  font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--rose-gold-text);
 }
 .milestone-title{
   font-family:var(--font-display); font-weight:600; font-size:1.25rem; color:var(--mauve);
@@ -230,10 +236,10 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 .polaroid-placeholder{
   display:none; position:absolute; inset:0; flex-direction:column; align-items:center; justify-content:center;
   gap:.35rem; text-align:center; padding:.75rem;
-  color:var(--rose-gold); font-family:var(--font-display); font-style:italic; font-size:.95rem;
+  color:var(--rose-gold-text); font-family:var(--font-display); font-style:italic; font-size:.95rem;
 }
 .polaroid-placeholder small{
-  font-family:var(--font-body); font-style:normal; font-size:.62rem; opacity:.7; word-break:break-all; letter-spacing:.02em;
+  font-family:var(--font-body); font-style:normal; font-size:.62rem; word-break:break-all; letter-spacing:.02em;
 }
 .polaroid.no-photo .polaroid-photo img{ display:none; }
 .polaroid.no-photo .polaroid-placeholder{ display:flex; }
@@ -264,7 +270,10 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 .flip-card:nth-child(5n+5){ --tilt:-2.5deg; }
 .flip-card-btn{
   all:unset; display:block; width:100%; height:100%; min-height:150px; cursor:pointer;
-  transform:rotate(var(--tilt,0deg)); transition:transform .35s cubic-bezier(.4,.2,.2,1);
+  border-radius:18px; transform:rotate(var(--tilt,0deg)); transition:transform .35s cubic-bezier(.4,.2,.2,1);
+}
+.flip-card-btn:focus-visible{
+  outline:3px solid var(--rose-gold-deep); outline-offset:3px;
 }
 .flip-card-btn:hover,.flip-card.flipped .flip-card-btn{ transform:rotate(0deg) scale(1.03); }
 .flip-inner{
@@ -284,15 +293,15 @@ body.reduced-motion .scroll-cue span{ animation:none; }
   gap:.3rem;
 }
 .flip-front .flip-icon{ font-size:1.7rem; line-height:1; filter:drop-shadow(0 2px 3px rgba(92,58,62,.15)); }
-.flip-front .num{ font-family:var(--font-display); font-weight:700; color:var(--gold); font-size:1.3rem; }
+.flip-front .num{ font-family:var(--font-display); font-weight:700; color:var(--rose-gold-text); font-size:1.3rem; }
 .flip-front .flip-hint{
-  font-family:var(--font-hand); font-size:.95rem; color:var(--rose-gold); opacity:.7;
+  font-family:var(--font-hand); font-size:.95rem; color:var(--rose-gold-text); opacity:.7;
   animation:hint-pulse 2.4s ease-in-out infinite;
 }
 @keyframes hint-pulse{ 0%,100%{ opacity:.5; } 50%{ opacity:.9; } }
-body.reduced-motion .flip-front .flip-hint{ animation:none; }
+body.reduced-motion .flip-front .flip-hint{ animation:none; opacity:1; }
 .flip-back{
-  background:linear-gradient(150deg, var(--rose-gold), var(--gold));
+  background:linear-gradient(150deg, var(--rose-gold-deep), var(--gold-deep));
   color:#fff; transform:rotateY(180deg); font-size:.85rem; line-height:1.45;
   gap:.5rem;
 }
@@ -308,7 +317,7 @@ body.reduced-motion .flip-card.flipped .flip-front{ opacity:0; }
 body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
 
 /* ================= Quiz ================= */
-.quiz-progress{ font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:.75rem; text-align:center; }
+.quiz-progress{ font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rose-gold-text); margin-bottom:.75rem; text-align:center; }
 .quiz-question{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; text-align:center; margin:0 0 1.5rem; }
 .quiz-options{ display:flex; flex-direction:column; gap:.7rem; }
 .quiz-option{
@@ -317,12 +326,12 @@ body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
   transition:background .25s ease, border-color .25s ease, opacity .25s ease;
 }
 .quiz-option:disabled{ pointer-events:none; }
-.quiz-option.correct{ background:var(--rose-gold); border-color:var(--rose-gold); color:#fff; font-weight:600; }
+.quiz-option.correct{ background:var(--rose-gold-deep); border-color:var(--rose-gold-deep); color:#fff; font-weight:600; }
 .quiz-option.wrong{ background:var(--soft-pink); border-color:var(--rose-gold); opacity:.7; }
 .quiz-option.dim{ opacity:.45; }
 .quiz-feedback{ margin-top:1.25rem; text-align:center; font-size:.95rem; min-height:1.4em; color:var(--mauve); }
 .quiz-continue{
-  display:block; margin:1.5rem auto 0; background:var(--rose-gold); color:#fff; border:none;
+  display:block; margin:1.5rem auto 0; background:var(--rose-gold-deep); color:#fff; border:none;
   padding:.8rem 1.8rem; border-radius:999px; font-weight:600; font-size:.9rem; min-height:44px;
 }
 .quiz-result-score{ font-family:var(--font-display); font-size:2.2rem; font-weight:700; color:var(--rose-gold); margin:0; }
@@ -353,14 +362,14 @@ body.reduced-motion .heart-pop{ animation:heart-fade .9s ease-out forwards; }
 .finale-hope{ margin:1.5rem 0 2.2rem; max-width:420px; font-size:1rem; position:relative; z-index:2; }
 .final-line{
   margin-top:1.8rem; font-family:var(--font-display); font-style:italic; font-size:1.15rem;
-  max-width:380px; color:var(--rose-gold); opacity:0; transform:translateY(10px);
+  max-width:380px; color:var(--rose-gold-text); opacity:0; transform:translateY(10px);
   transition:opacity .8s ease, transform .8s ease; position:relative; z-index:2;
 }
 .final-line.show{ opacity:1; transform:none; }
 body.reduced-motion .final-line{ transform:none; }
 #confettiCanvas{ position:fixed; inset:0; z-index:900; pointer-events:none; }
 .btn-primary{
-  background:linear-gradient(135deg, var(--rose-gold), var(--gold));
+  background:linear-gradient(135deg, var(--rose-gold-deep), var(--gold-deep));
   color:#fff; border:none; padding:1rem 2.2rem; border-radius:999px;
   font-size:1rem; letter-spacing:.03em; font-weight:600; min-height:44px;
   box-shadow:0 16px 34px -10px rgba(183,110,121,.65);
