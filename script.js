@@ -1,3 +1,4 @@
+// GENERATED FILE — edit the fragments in js/ instead, then run `npm run concat`.
 (function(){
   "use strict";
 
@@ -37,8 +38,8 @@
     }, 1700);
   }
   envelopeTrigger.addEventListener('click', openEnvelope);
-
-  /* ================= Mute button ================= */
+  /* ================= Mute button =================
+     Uses envelopeSound from 01-envelope.js. */
   var muteBtn = document.getElementById('muteBtn');
   var muted = false;
   muteBtn.addEventListener('click', function(){
@@ -66,8 +67,9 @@
     var playPromise = bgMusic.play();
     if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
   }
-
   /* ================= Lottie motion graphics =================
+     Uses reducedMotion from 01-envelope.js. Exposes playLottieOnce and
+     lottieReady, used by 01-envelope.js, 08-quiz.js and 09-finale.js.
      Small hand-built animations in animations/*.json, played via the
      vendored lottie-web (vendor/lottie.min.js). Skipped entirely under
      prefers-reduced-motion, matching the rest of the site's motion. */
@@ -172,8 +174,8 @@
       mountLottieOnView('lottieHardMoments', 'animations/hard-moments-growth.json');
     }
   })();
-
-  /* ================= Petals (falling cherry blossoms) ================= */
+  /* ================= Petals (falling cherry blossoms) =================
+     Uses reducedMotion from 01-envelope.js. */
   if(!reducedMotion){
     /* Finale already layers confetti + a Lottie heart burst on click, so it
        gets a lighter petal count — kept as ambient background, not the focal effect. */
@@ -201,7 +203,6 @@
       }
     });
   }
-
   /* ================= Polaroid photo/video slots ================= */
   document.querySelectorAll('.polaroid-photo img').forEach(function(img){
     img.addEventListener('error', function(){
@@ -213,7 +214,6 @@
       video.closest('.polaroid').classList.add('no-photo');
     });
   });
-
   /* ================= Reasons: flip cards ================= */
   var reasons = [
     { icon: '🙏', text: "You love GOD so much, and that attracted me to you." },
@@ -271,7 +271,6 @@
       card.classList.toggle('flipped');
     });
   });
-
   /* ================= Scroll reveals ================= */
   var revealEls = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
@@ -287,8 +286,8 @@
   } else {
     revealEls.forEach(function(el){ el.classList.add('in-view'); });
   }
-
-  /* ================= Quiz ================= */
+  /* ================= Quiz =================
+     Uses lottieReady from 03-lottie.js. */
   var quizData = [
     {
       q: "How did we get to know each other?",
@@ -404,8 +403,9 @@
   }
 
   renderQuestion();
-
-  /* ================= Finale: confetti ================= */
+  /* ================= Finale: confetti =================
+     Uses reducedMotion from 01-envelope.js and playLottieOnce from
+     03-lottie.js. Closes the IIFE opened at the top of 01-envelope.js. */
   var canvas = document.getElementById('confettiCanvas');
   var ctx = canvas.getContext('2d');
   var confettiParticles = [];
