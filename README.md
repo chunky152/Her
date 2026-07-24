@@ -21,12 +21,20 @@ Live structure: **HTML / CSS / vanilla JS**, no framework. `npm run build` runs 
 ```
 index.html     Page markup
 style.css      All styling
-script.js      All behavior (envelope, music, reveals, flip cards, quiz, confetti, Lottie)
+script.js      GENERATED — `npm run concat` builds this from js/*.js, don't edit directly
+js/            The real source: one focused file per feature (envelope, audio, lottie,
+               petals, polaroid, reasons, reveals, quiz, finale), concatenated in that
+               order into script.js
 photos/        Drop real photos/videos here for the "Our Story" polaroids
 audio/         Drop your background-music.mp3 and envelope-open.mp3 here
 animations/    Hand-built Lottie JSON motion graphics (hearts, checkmark, sparkle burst)
 vendor/        Vendored lottie-web player (vendor/lottie.min.js)
 ```
+
+Editing behavior? Change the relevant file in `js/`, then run `npm run concat` to regenerate
+`script.js` (this also happens automatically as the first step of `npm run build`). The split
+exists purely for readability — the files share one closure at runtime exactly like the old
+single script.js did, so cross-file calls (e.g. the envelope starting the music) still just work.
 
 ## Running locally
 
@@ -64,6 +72,6 @@ Everything is plain text/data in the source, no CMS:
 
 - Letter text — `index.html`, `#letter` section.
 - Timeline milestones — `index.html`, `#story` section.
-- The 5 reasons — the `reasons` array in `script.js`.
-- Quiz questions — the `quizData` array in `script.js`.
+- The 5 reasons — the `reasons` array in `js/06-reasons.js`.
+- Quiz questions — the `quizData` array in `js/08-quiz.js`.
 - Colors and fonts — CSS custom properties at the top of `style.css` (`--blush`, `--rose-gold`, `--gold`, `--mauve`, `--font-display`, `--font-body`, `--font-hand`).
