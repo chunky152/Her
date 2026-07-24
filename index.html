@@ -22,7 +22,7 @@
 <audio id="envelopeSound" src="audio/envelope-open.mp3" preload="auto"></audio>
 
 <!-- ============ Mute button (always visible) ============ -->
-<button id="muteBtn" class="mute-btn" aria-label="Mute music">&#128266;</button>
+<button id="muteBtn" class="mute-btn" aria-label="Mute music"><svg viewBox="0 0 20 16" fill="none" aria-hidden="true"><path d="M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z" fill="#fff"/><path d="M11,5 Q13.5,8 11,11" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><path d="M13,3 Q17,8 13,13" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg></button>
 
 <!-- ============ Envelope overlay ============ -->
 <div id="envelope-overlay">
@@ -163,6 +163,8 @@
   <h2 class="eyebrow reveal">5 Reasons ✨</h2>
   <div id="lottieReasonsHearts" class="lottie-reasons-hearts" aria-hidden="true"></div>
   <div class="reasons-grid" id="reasonsGrid"></div>
+  <div id="lottieReasonsComplete" class="lottie-reasons-complete" aria-hidden="true"></div>
+  <p class="reasons-complete-msg" id="reasonsCompleteMsg" aria-live="polite">You found all 5 💕 — and honestly, I could write a hundred more.</p>
 </section>
 
 <!-- ============ Quiz ============ -->

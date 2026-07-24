@@ -39,12 +39,16 @@
   }
   envelopeTrigger.addEventListener('click', openEnvelope);
   /* ================= Mute button =================
-     Uses envelopeSound from 01-envelope.js. */
+     Uses envelopeSound from 01-envelope.js. Icon markup is duplicated in
+     index.html (unmuted, the default state) so it doesn't need to wait for
+     JS to render on first paint. */
   var muteBtn = document.getElementById('muteBtn');
   var muted = false;
+  var speakerIcon = '<svg viewBox="0 0 20 16" fill="none" aria-hidden="true"><path d="M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z" fill="#fff"/><path d="M11,5 Q13.5,8 11,11" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><path d="M13,3 Q17,8 13,13" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  var mutedIcon = '<svg viewBox="0 0 20 16" fill="none" aria-hidden="true"><path d="M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z" fill="#fff"/><path d="M12,5 L17,11 M17,5 L12,11" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
   muteBtn.addEventListener('click', function(){
     muted = !muted;
-    muteBtn.innerHTML = muted ? '&#128263;' : '&#128266;';
+    muteBtn.innerHTML = muted ? mutedIcon : speakerIcon;
     muteBtn.setAttribute('aria-label', muted ? 'Unmute music' : 'Mute music');
     applyMute();
   });
@@ -214,7 +218,8 @@
       video.closest('.polaroid').classList.add('no-photo');
     });
   });
-  /* ================= Reasons: flip cards ================= */
+  /* ================= Reasons: flip cards =================
+     Uses lottieReady and lottie from 03-lottie.js for the completion burst. */
   var reasons = [
     { icon: '🙏', text: "You love GOD so much, and that attracted me to you." },
     { icon: '🌸', text: "You are very genuine and true to yourself." },
@@ -223,6 +228,27 @@
     { icon: '🎁', text: "You make me feel appreciated for the little things I do for you." }
   ];
   var reasonsGrid = document.getElementById('reasonsGrid');
+  var reasonsFlipped = {};
+  var reasonsFlippedCount = 0;
+  var reasonsCompleted = false;
+
+  function checkReasonsComplete(){
+    if(reasonsCompleted || reasonsFlippedCount < reasons.length) return;
+    reasonsCompleted = true;
+    var msg = document.getElementById('reasonsCompleteMsg');
+    var burstEl = document.getElementById('lottieReasonsComplete');
+    if(msg){ msg.classList.add('show'); }
+    if(burstEl){
+      burstEl.classList.add('show');
+      if(lottieReady){
+        lottie.loadAnimation({
+          container: burstEl, renderer: 'svg', loop: false, autoplay: true,
+          path: 'animations/sparkle-burst.json'
+        });
+      }
+    }
+  }
+
   reasons.forEach(function(item, idx){
     var card = document.createElement('div');
     card.className = 'flip-card reveal';
@@ -269,6 +295,11 @@
 
     btn.addEventListener('click', function(){
       card.classList.toggle('flipped');
+      if(card.classList.contains('flipped') && !reasonsFlipped[idx]){
+        reasonsFlipped[idx] = true;
+        reasonsFlippedCount++;
+        checkReasonsComplete();
+      }
     });
   });
   /* ================= Scroll reveals ================= */

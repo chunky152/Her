@@ -80,13 +80,15 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
 /* ================= Mute button ================= */
 .mute-btn{
   position:fixed; top:max(14px, env(safe-area-inset-top)); right:14px; z-index:1100;
-  width:44px; height:44px; border-radius:50%; border:1px solid rgba(183,110,121,.4);
-  background:rgba(255,250,247,.85); backdrop-filter:blur(6px);
+  width:44px; height:44px; border-radius:50%; border:none;
+  background:radial-gradient(circle at 35% 30%, var(--gold), var(--rose-gold-deep) 75%);
   display:flex; align-items:center; justify-content:center;
-  font-size:1.15rem; box-shadow:0 8px 20px -8px rgba(92,58,62,.4);
+  box-shadow:0 8px 20px -8px rgba(92,58,62,.5), inset 0 -2px 4px rgba(0,0,0,.15);
   transition:transform .2s ease;
 }
+.mute-btn svg{ width:20px; height:16px; }
 .mute-btn:active{ transform:scale(.92); }
+.mute-btn:focus-visible{ outline:3px solid var(--rose-gold-deep); outline-offset:3px; }
 
 /* ================= Envelope overlay ================= */
 #envelope-overlay{
@@ -416,10 +418,27 @@ body.reduced-motion .final-line{ transform:none; }
   width:min(90vw,480px); height:min(90vw,480px); pointer-events:none; z-index:3;
 }
 .quiz-mascot{ display:block; width:120px; height:120px; margin:0 auto 1rem; }
+.lottie-reasons-complete{
+  width:200px; height:200px; margin:1rem auto -3rem; pointer-events:none;
+  opacity:0; transition:opacity .5s ease;
+}
+.lottie-reasons-complete.show{ opacity:1; }
 body.reduced-motion .lottie-envelope-burst,
 body.reduced-motion .lottie-reasons-hearts,
 body.reduced-motion .lottie-finale-burst,
+body.reduced-motion .lottie-reasons-complete,
 body.reduced-motion .quiz-mascot{ display:none; }
+
+/* ================= Reasons: completion reward ================= */
+.reasons-complete-msg{
+  position:relative; z-index:2; margin:0 auto; padding-top:1.5rem; max-width:320px;
+  font-family:var(--font-display); font-style:italic; font-size:1.1rem;
+  color:var(--rose-gold-text); text-align:center;
+  opacity:0; transform:translateY(12px) scale(.96);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.reasons-complete-msg.show{ opacity:1; transform:none; }
+body.reduced-motion .reasons-complete-msg{ transform:none; }
 
 /* ================= Funny Moments laugh emoji ================= */
 .laugh-emoji{ display:inline-block; animation:laugh-bounce 1.1s ease-in-out infinite; }
