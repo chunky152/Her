@@ -97,35 +97,46 @@
       <p class="milestone-date">January 2026</p>
       <h3 class="milestone-title">Funny Moments <span class="laugh-emoji" aria-hidden="true">😂</span></h3>
       <p class="milestone-text">You'd send me videos of yourself dancing 💃, and every single time, I couldn't stop laughing. You have a way of making me happy without even trying.</p>
-      <div class="polaroid-group">
-        <div class="polaroid video-polaroid">
-          <div class="polaroid-photo">
-            <video src="photos/story-3-funny-moments-1.mp4" controls playsinline preload="metadata" muted></video>
-            <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-1.mp4</small></span>
+      <div class="polaroid-carousel" id="funnyMomentsCarousel">
+        <div class="polaroid-carousel-track" id="funnyMomentsCarouselTrack">
+          <div class="polaroid video-polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="Play video">
+                <video src="photos/story-3-funny-moments-1.mp4" playsinline preload="metadata" muted></video>
+              </button>
+              <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-1.mp4</small></span>
+            </div>
+            <p class="polaroid-caption">silly faces only 🤪</p>
           </div>
-          <p class="polaroid-caption">silly faces only 🤪</p>
-        </div>
-        <div class="polaroid video-polaroid">
-          <div class="polaroid-photo">
-            <video src="photos/story-3-funny-moments-2.mp4" controls playsinline preload="metadata" muted></video>
-            <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-2.mp4</small></span>
+          <div class="polaroid video-polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="Play video">
+                <video src="photos/story-3-funny-moments-2.mp4" playsinline preload="metadata" muted></video>
+              </button>
+              <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-2.mp4</small></span>
+            </div>
+            <p class="polaroid-caption">dancing queen 💃</p>
           </div>
-          <p class="polaroid-caption">dancing queen 💃</p>
-        </div>
-        <div class="polaroid video-polaroid">
-          <div class="polaroid-photo">
-            <video src="photos/story-3-funny-moments-3.mp4" controls playsinline preload="metadata" muted></video>
-            <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-3.mp4</small></span>
+          <div class="polaroid video-polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="Play video">
+                <video src="photos/story-3-funny-moments-3.mp4" playsinline preload="metadata" muted></video>
+              </button>
+              <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-3.mp4</small></span>
+            </div>
+            <p class="polaroid-caption">dance break outside 🌸</p>
           </div>
-          <p class="polaroid-caption">dance break outside 🌸</p>
-        </div>
-        <div class="polaroid video-polaroid">
-          <div class="polaroid-photo">
-            <video src="photos/story-3-funny-moments-4.mp4" controls playsinline preload="metadata" muted></video>
-            <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-4.mp4</small></span>
+          <div class="polaroid video-polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="Play video">
+                <video src="photos/story-3-funny-moments-4.mp4" playsinline preload="metadata" muted></video>
+              </button>
+              <span class="polaroid-placeholder">add a video<br><small>photos/story-3-funny-moments-4.mp4</small></span>
+            </div>
+            <p class="polaroid-caption">full dance mode 🔥</p>
           </div>
-          <p class="polaroid-caption">full dance mode 🔥</p>
         </div>
+        <div class="polaroid-carousel-dots" id="funnyMomentsCarouselDots"></div>
       </div>
     </div>
 
@@ -234,8 +245,9 @@
 
 <!-- ============ Photo lightbox ============ -->
 <div class="lightbox" id="lightbox" aria-hidden="true">
-  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close photo">&times;</button>
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
   <img src="" alt="" id="lightboxImg">
+  <video id="lightboxVideo" playsinline controls></video>
 </div>
 
 <script src="vendor/lottie.min.js"></script>
