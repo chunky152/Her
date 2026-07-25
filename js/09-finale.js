@@ -1,6 +1,6 @@
   /* ================= Finale: confetti =================
      Uses reducedMotion from 01-envelope.js and playLottieOnce from
-     03-lottie.js. Closes the IIFE opened at the top of 01-envelope.js. */
+     03-lottie.js. */
   var canvas = document.getElementById('confettiCanvas');
   var ctx = canvas.getContext('2d');
   var confettiParticles = [];
@@ -74,5 +74,3 @@
     finalLine.classList.add('show');
     lastThingBtn.disabled = true;
   });
-
-})();
