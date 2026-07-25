@@ -242,7 +242,6 @@ body.reduced-motion .milestone-accent{ display:none; }
 .polaroid:hover{ transform:rotate(0deg) scale(1.035); box-shadow:0 22px 42px -18px rgba(92,58,62,.55); }
 @media (min-width:1100px){
   .polaroid{ max-width:310px; }
-  .polaroid-group .polaroid{ max-width:230px; }
 }
 .polaroid::before{
   content:''; position:absolute; top:-14px; left:50%; margin-left:-32px;
@@ -271,12 +270,6 @@ body.reduced-motion .milestone-accent{ display:none; }
   color:var(--mauve); text-align:center; line-height:1;
 }
 
-/* ---------- Polaroid group (multiple videos/photos per milestone) ---------- */
-.polaroid-group{ display:flex; flex-wrap:wrap; gap:1.1rem; margin-top:1.25rem; }
-.polaroid-group .polaroid{ margin-top:0; max-width:200px; }
-.polaroid-group .polaroid:nth-child(3n+1){ --tilt:-3deg; }
-.polaroid-group .polaroid:nth-child(3n+2){ --tilt:2.5deg; }
-.polaroid-group .polaroid:nth-child(3n+3){ --tilt:-2deg; }
 .polaroid-photo video{ width:100%; height:100%; object-fit:cover; display:block; }
 .polaroid.no-photo .polaroid-photo video{ display:none; }
 
@@ -303,6 +296,18 @@ body.reduced-motion .milestone-accent{ display:none; }
 }
 .polaroid.no-photo .polaroid-photo-btn{ pointer-events:none; }
 .polaroid-photo-btn:focus-visible{ outline:3px solid var(--rose-gold-deep); outline-offset:-3px; }
+.video-polaroid .polaroid-photo-btn{ cursor:pointer; }
+.video-polaroid .polaroid-photo-btn::before{
+  content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:56px; height:56px; border-radius:50%; background:rgba(30,15,17,.5);
+}
+.video-polaroid .polaroid-photo-btn::after{
+  content:''; position:absolute; top:50%; left:calc(50% + 3px); transform:translate(-50%,-50%);
+  width:0; height:0;
+  border-top:11px solid transparent; border-bottom:11px solid transparent; border-left:16px solid #fff;
+}
+.polaroid.no-photo .polaroid-photo-btn::before,
+.polaroid.no-photo .polaroid-photo-btn::after{ display:none; }
 
 /* ================= Lightbox ================= */
 .lightbox{
@@ -312,21 +317,28 @@ body.reduced-motion .milestone-accent{ display:none; }
   opacity:0; pointer-events:none; transition:opacity .3s ease;
 }
 .lightbox.show{ opacity:1; pointer-events:auto; }
-.lightbox img{
-  max-width:100%; max-height:100%; border-radius:8px; display:block;
+.lightbox img,
+.lightbox video{
+  max-width:100%; max-height:100%; border-radius:8px;
   box-shadow:0 30px 80px -20px rgba(0,0,0,.6);
-  transform:scale(.92); transition:transform .3s ease; cursor:zoom-out;
+  transform:scale(.92); transition:transform .3s ease;
+  display:none;
 }
-.lightbox.show img{ transform:scale(1); }
+.lightbox img{ cursor:zoom-out; }
+.lightbox img.active,
+.lightbox video.active{ display:block; }
+.lightbox.show img.active,
+.lightbox.show video.active{ transform:scale(1); }
 .lightbox-close{
   all:unset; position:absolute; top:max(16px, env(safe-area-inset-top)); right:16px;
-  width:44px; height:44px; border-radius:50%; cursor:pointer;
+  width:44px; height:44px; border-radius:50%; cursor:pointer; z-index:1;
   background:rgba(255,255,255,.15); color:#fff; font-size:1.8rem; line-height:1;
   display:flex; align-items:center; justify-content:center;
 }
 .lightbox-close:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
 body.reduced-motion .lightbox,
-body.reduced-motion .lightbox img{ transition:none; }
+body.reduced-motion .lightbox img,
+body.reduced-motion .lightbox video{ transition:none; }
 
 /* ================= Reasons ================= */
 #reasons{ background:linear-gradient(180deg, var(--soft-pink), var(--cream)); }
