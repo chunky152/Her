@@ -56,7 +56,7 @@ Each milestone in "Our Story" has a polaroid slot wired to an image file that do
 | `photos/story-2-first-meeting.jpg` | First Physical Meeting |
 | `photos/story-3-funny-moments-1.mp4` … `-4.mp4` | Funny Moments (4 video slots) |
 | `photos/story-4-hard-moments.jpg` | Hard Moments |
-| `photos/story-5-birthday.jpg` | Today: Your Birthday |
+| `photos/story-5-birthday-1.jpg` … `-5.jpg` | Today: Your Birthday (5-photo carousel, tap a photo to enlarge) |
 
 If a file is missing, that slot shows a styled placeholder instead of a broken image, so the page never looks broken while you're still collecting photos.
 

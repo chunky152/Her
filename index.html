@@ -146,12 +146,55 @@
       <h3 class="milestone-title">Today: Your Birthday</h3>
       <p class="milestone-text">Today I celebrate you. May God add blessings and value to your life. I looovveeee yoouuuoouuuoouuuoo 🥰.</p>
       <img src="animations/cute-mascot-jumping.svg" class="milestone-accent" alt="" aria-hidden="true">
-      <div class="polaroid">
-        <div class="polaroid-photo">
-          <img src="photos/story-5-birthday.jpg" alt="Celebrating your birthday" loading="lazy">
-          <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday.jpg</small></span>
+      <div class="polaroid-carousel" id="birthdayCarousel">
+        <div class="polaroid-carousel-track" id="birthdayCarouselTrack">
+          <div class="polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
+                <img src="photos/story-5-birthday-1.jpg" alt="Celebrating your birthday" loading="lazy">
+              </button>
+              <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday-1.jpg</small></span>
+            </div>
+            <p class="polaroid-caption">happy 17th 🎂✨</p>
+          </div>
+          <div class="polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
+                <img src="photos/story-5-birthday-2.jpg" alt="Celebrating your birthday" loading="lazy">
+              </button>
+              <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday-2.jpg</small></span>
+            </div>
+            <p class="polaroid-caption">celebrating you today 💕</p>
+          </div>
+          <div class="polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
+                <img src="photos/story-5-birthday-3.jpg" alt="Celebrating your birthday" loading="lazy">
+              </button>
+              <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday-3.jpg</small></span>
+            </div>
+            <p class="polaroid-caption">so much joy 🎉</p>
+          </div>
+          <div class="polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
+                <img src="photos/story-5-birthday-4.jpg" alt="Celebrating your birthday" loading="lazy">
+              </button>
+              <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday-4.jpg</small></span>
+            </div>
+            <p class="polaroid-caption">17 &amp; thriving ✨</p>
+          </div>
+          <div class="polaroid carousel-slide">
+            <div class="polaroid-photo">
+              <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
+                <img src="photos/story-5-birthday-5.jpg" alt="Celebrating your birthday" loading="lazy">
+              </button>
+              <span class="polaroid-placeholder">add a photo<br><small>photos/story-5-birthday-5.jpg</small></span>
+            </div>
+            <p class="polaroid-caption">grateful for you 🥰</p>
+          </div>
         </div>
-        <p class="polaroid-caption">happy 17th 🎂✨</p>
+        <div class="polaroid-carousel-dots" id="birthdayCarouselDots"></div>
       </div>
     </div>
 
@@ -188,6 +231,12 @@
   <button class="btn-primary" id="lastThingBtn">One last thing…</button>
   <p class="final-line" id="finalLine">Now go give your Mother and your Father a hug and tell them that you love them so much.</p>
 </section>
+
+<!-- ============ Photo lightbox ============ -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close photo">&times;</button>
+  <img src="" alt="" id="lightboxImg">
+</div>
 
 <script src="vendor/lottie.min.js"></script>
 <script src="script.js"></script>
