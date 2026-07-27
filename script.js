@@ -240,11 +240,11 @@
   /* ================= Reasons: flip cards =================
      Uses lottieReady and lottie from 03-lottie.js for the completion burst. */
   var reasons = [
-    { icon: '🙏', text: "You love GOD so much, and that attracted me to you." },
-    { icon: '🌸', text: "You are very genuine and true to yourself." },
-    { icon: '😊', text: "You are very honest, loving, and caring to the people that you love." },
-    { icon: '🫶', text: "You open up to me, and that makes me feel important in your life." },
-    { icon: '🎁', text: "You make me feel appreciated for the little things I do for you." }
+    { icon: '🙏', teaser: 'Your faith', text: "You love GOD so much, and that attracted me to you." },
+    { icon: '🌸', teaser: 'Just being you', text: "You are very genuine and true to yourself." },
+    { icon: '😊', teaser: 'Your caring heart', text: "You are very honest, loving, and caring to the people that you love." },
+    { icon: '🫶', teaser: 'You open up', text: "You open up to me, and that makes me feel important in your life." },
+    { icon: '🎁', teaser: 'You appreciate me', text: "You make me feel appreciated for the little things I do for you." }
   ];
   var reasonsGrid = document.getElementById('reasonsGrid');
   var reasonsFlipped = {};
@@ -285,14 +285,14 @@
     var frontIcon = document.createElement('span');
     frontIcon.className = 'flip-icon';
     frontIcon.textContent = item.icon;
-    var num = document.createElement('span');
-    num.className = 'num';
-    num.textContent = String(idx + 1).padStart(2, '0');
+    var teaser = document.createElement('span');
+    teaser.className = 'flip-teaser';
+    teaser.textContent = item.teaser;
     var hint = document.createElement('span');
     hint.className = 'flip-hint';
     hint.textContent = 'tap ✨';
     front.appendChild(frontIcon);
-    front.appendChild(num);
+    front.appendChild(teaser);
     front.appendChild(hint);
 
     var back = document.createElement('div');

@@ -386,6 +386,9 @@ body.reduced-motion .lightbox video{ transition:none; }
 
 /* ================= Reasons ================= */
 #reasons{ background:linear-gradient(180deg, var(--soft-pink), var(--cream)); }
+.reasons-intro{
+  margin:0 auto; max-width:340px; font-size:.98rem; color:var(--mauve); opacity:.85;
+}
 .reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
 .flip-card{ flex:0 1 calc(50% - .5rem); perspective:1000px; min-height:150px; }
 @media (min-width:700px){
@@ -426,7 +429,10 @@ body.reduced-motion .lightbox video{ transition:none; }
   .flip-front{ background:linear-gradient(165deg, #ffffff, var(--cream)); border:1px solid rgba(183,110,121,.18); }
 }
 .flip-front .flip-icon{ font-size:1.7rem; line-height:1; filter:drop-shadow(0 2px 3px rgba(92,58,62,.15)); }
-.flip-front .num{ font-family:var(--font-display); font-weight:700; color:var(--rose-gold-text); font-size:1.3rem; }
+.flip-front .flip-teaser{
+  font-family:var(--font-display); font-style:italic; font-weight:700;
+  color:var(--rose-gold-text); font-size:1rem; line-height:1.25;
+}
 .flip-front .flip-hint{
   font-family:var(--font-hand); font-size:.95rem; color:var(--rose-gold-text); opacity:.7;
   animation:hint-pulse 2.4s ease-in-out infinite;
