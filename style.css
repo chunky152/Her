@@ -48,7 +48,7 @@ body.locked{ overflow:hidden; height:100%; }
 img{ max-width:100%; display:block; }
 
 button{ font-family:inherit; cursor:pointer; }
-button:active{ outline:2px solid rgba(183,110,121,.6); outline-offset:0; }
+/* button:active{ outline:2px solid rgba(183,110,121,.6); outline-offset:0; } */
 a{ color:inherit; }
 
 @media (prefers-reduced-motion: reduce){
