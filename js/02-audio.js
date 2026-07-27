@@ -17,12 +17,15 @@
      Drop your track in as audio/background-music.mp3 (see README) — this just wires up
      the <audio id="bgMusic"> element in the page and controls it via the mute button. */
   var bgMusic = document.getElementById('bgMusic');
+  var bgMusicVolume = 0.55;
   var isPlaying = false;
-  bgMusic.volume = 0.55;
+  bgMusic.volume = bgMusicVolume;
 
   function applyMute(){
     bgMusic.muted = muted;
     envelopeSound.muted = muted;
+    var lbVideo = document.getElementById('lightboxVideo');
+    if(lbVideo){ lbVideo.muted = muted; }
   }
 
   function startMusic(){
@@ -30,4 +33,28 @@
     isPlaying = true;
     var playPromise = bgMusic.play();
     if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+  }
+
+  /* Generic volume fade, used to duck the background music when a Funny
+     Moments video plays its own audio (see 10-carousels.js). A shared
+     token means a new fade — on any element — always supersedes whatever
+     fade was previously in flight, so rapid open/close of the lightbox
+     can't leave stale rAF loops fighting over volume. */
+  var fadeToken = 0;
+  function fadeAudioVolume(audioEl, target, duration, onComplete){
+    var id = ++fadeToken;
+    var start = audioEl.volume;
+    var startTime = null;
+    function step(ts){
+      if(id !== fadeToken) return;
+      if(startTime === null){ startTime = ts; }
+      var t = Math.min((ts - startTime) / duration, 1);
+      audioEl.volume = start + (target - start) * t;
+      if(t < 1){
+        requestAnimationFrame(step);
+      } else if(onComplete){
+        onComplete();
+      }
+    }
+    requestAnimationFrame(step);
   }
