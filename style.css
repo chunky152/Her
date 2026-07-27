@@ -30,7 +30,10 @@
 *,*::before,*::after{ box-sizing:border-box; }
 html{
   -webkit-text-size-adjust:100%; scroll-behavior:smooth;
-  -webkit-tap-highlight-color:rgba(183,110,121,.25);
+  /* The native tap-highlight is a filled overlay with no way to make it
+     outline-only, so it's disabled here in favor of a real :active outline
+     below, which traces each button's own shape (including circles). */
+  -webkit-tap-highlight-color:transparent;
 }
 html,body{ margin:0; padding:0; width:100%; overflow-x:hidden; }
 body{
@@ -45,6 +48,7 @@ body.locked{ overflow:hidden; height:100%; }
 img{ max-width:100%; display:block; }
 
 button{ font-family:inherit; cursor:pointer; }
+button:active{ outline:2px solid rgba(183,110,121,.6); outline-offset:0; }
 a{ color:inherit; }
 
 @media (prefers-reduced-motion: reduce){
