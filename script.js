@@ -682,3 +682,4 @@
     initCarousel('birthdayCarouselTrack', 'birthdayCarouselDots', 'photo');
     initCarousel('funnyMomentsCarouselTrack', 'funnyMomentsCarouselDots', 'video');
   })();
+})();
