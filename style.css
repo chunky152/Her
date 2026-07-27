@@ -115,16 +115,31 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
 
 /* ================= Envelope overlay ================= */
 #envelope-overlay{
-  position:fixed; inset:0; z-index:1000;
+  position:fixed; inset:0; z-index:1000; overflow:hidden;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem;
-  background:radial-gradient(circle at 50% 30%, var(--soft-pink), var(--blush) 70%);
   transition:opacity 1s ease;
   padding:1.5rem;
   text-align:center;
 }
 #envelope-overlay.fade-out{ opacity:0; pointer-events:none; }
 
+/* A blurred first-meeting photo behind the envelope — a soft hint of what's
+   waiting, not a full reveal. The tint layer sits on top at the same
+   gradient the overlay used to have as a flat background, so text/button
+   contrast is unaffected; only the photo peeking through underneath it is new. */
+.envelope-bg-photo{
+  position:absolute; inset:-26px; z-index:0;
+  background:url('photos/story-2-first-meeting.jpg') center 35% / cover no-repeat;
+  filter:blur(10px);
+}
+.envelope-bg-tint{
+  position:absolute; inset:0; z-index:1;
+  background:radial-gradient(circle at 50% 30%, var(--soft-pink), var(--blush) 70%);
+  opacity:.82;
+}
+
 .envelope-trigger{
+  position:relative; z-index:2;
   background:none; border:none; padding:0; display:flex; flex-direction:column; align-items:center; gap:1.75rem;
 }
 .envelope{ position:relative; width:230px; height:150px; }
