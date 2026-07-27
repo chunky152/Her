@@ -23,10 +23,29 @@
   envelopeSound.addEventListener('ended', queueMusic);
   envelopeSound.addEventListener('error', queueMusic);
 
+  /* Wax seal cracks open like the letter heart does, instead of just
+     shrinking away. Skipped under reduced motion (lottieReady is false),
+     leaving the existing CSS shrink/fade of the whole badge untouched. */
+  var waxSealIcon = document.getElementById('waxSealIcon');
+  var lottieWaxSeal = document.getElementById('lottieWaxSeal');
+  function crackWaxSeal(){
+    if(!lottieReady || !waxSealIcon || !lottieWaxSeal) return;
+    waxSealIcon.classList.add('cracking');
+    lottieWaxSeal.classList.add('show');
+    lottie.loadAnimation({
+      container: lottieWaxSeal,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: 'animations/wax-seal-crack.json'
+    });
+  }
+
   function openEnvelope(){
     if(envelope.classList.contains('opening')) return;
     envelope.classList.add('opening');
     playLottieOnce('lottieEnvelope', 'animations/sparkle-burst.json');
+    crackWaxSeal();
     var soundPromise = envelopeSound.play();
     if(soundPromise && soundPromise.catch){ soundPromise.catch(queueMusic); }
     setTimeout(function(){

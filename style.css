@@ -14,6 +14,17 @@
   --font-display:'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-body:'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --font-hand:'Caveat', 'Segoe Script', cursive;
+  /* Glassmorphism tokens — shared blur/saturation/border so the site's
+     "glassiness" can be tuned in one place instead of per-component.
+     Background alphas stay local to each rule since they're deliberately
+     different (subtle over dark lightbox vs strong over flat cards). */
+  --glass-blur-xs:8px;
+  --glass-blur-sm:10px;
+  --glass-blur-md:14px;
+  --glass-blur-lg:18px;
+  --glass-saturate:160%;
+  --glass-border:rgba(255,255,255,.55);
+  --glass-border-subtle:rgba(255,255,255,.35);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
@@ -65,10 +76,16 @@ a{ color:inherit; }
 }
 
 .card{
-  background:var(--cream);
+  background:rgba(255,255,255,.5);
+  backdrop-filter:blur(var(--glass-blur-lg)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-lg)) saturate(var(--glass-saturate));
+  border:1px solid var(--glass-border);
   border-radius:22px;
   box-shadow:0 25px 60px -25px rgba(92,58,62,.35);
   padding:2.25rem 1.5rem;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .card{ background:var(--cream); }
 }
 @media (min-width:700px){ .card{ padding:3rem 2.5rem; } }
 
@@ -80,11 +97,17 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
 /* ================= Mute button ================= */
 .mute-btn{
   position:fixed; top:max(14px, env(safe-area-inset-top)); right:14px; z-index:1100;
-  width:44px; height:44px; border-radius:50%; border:none;
-  background:radial-gradient(circle at 35% 30%, var(--gold), var(--rose-gold-deep) 75%);
+  width:44px; height:44px; border-radius:50%;
+  border:1px solid var(--glass-border-subtle);
+  background:radial-gradient(circle at 35% 30%, rgba(183,110,121,.92), rgba(117,58,67,.88) 60%);
+  backdrop-filter:blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
   display:flex; align-items:center; justify-content:center;
   box-shadow:0 8px 20px -8px rgba(92,58,62,.5), inset 0 -2px 4px rgba(0,0,0,.15);
   transition:transform .2s ease;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .mute-btn{ background:radial-gradient(circle at 35% 30%, var(--rose-gold), var(--rose-gold-deep) 60%); border:none; }
 }
 .mute-btn svg{ width:20px; height:16px; }
 .mute-btn:active{ transform:scale(.92); }
@@ -109,9 +132,15 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
 
 .envelope-body{
   position:absolute; inset:0; top:12%;
-  background:linear-gradient(160deg,#ffffff,var(--cream));
+  background:linear-gradient(160deg, rgba(255,255,255,.55), rgba(255,250,247,.5));
+  backdrop-filter:blur(var(--glass-blur-md)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-md)) saturate(var(--glass-saturate));
+  border:1px solid var(--glass-border);
   border-radius:8px;
   box-shadow:0 25px 55px -18px rgba(92,58,62,.45);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .envelope-body{ background:linear-gradient(160deg,#ffffff,var(--cream)); border:none; }
 }
 .envelope-flap{
   position:absolute; top:0; left:0; width:100%; height:0;
@@ -134,10 +163,17 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
   display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.3rem;
   box-shadow:0 8px 16px rgba(92,58,62,.5), inset 0 -3px 6px rgba(0,0,0,.25);
   z-index:4;
-  transition:opacity .5s ease, transform .5s ease;
+  transition:opacity .3s ease .85s, transform .3s ease .85s;
 }
+.wax-seal-icon.cracking{ opacity:0; }
+.wax-seal-lottie{
+  position:absolute; inset:0; width:100%; height:100%;
+  opacity:0; transition:opacity .1s ease;
+}
+.wax-seal-lottie.show{ opacity:1; }
 .envelope.opening .envelope-flap{ transform:rotateX(180deg); }
 .envelope.opening .wax-seal{ opacity:0; transform:translate(-50%,-50%) scale(.4); }
+body.reduced-motion .wax-seal{ transition-delay:0s; }
 
 .envelope-cta{
   font-family:var(--font-display); font-style:italic; font-weight:500;
@@ -332,8 +368,16 @@ body.reduced-motion .milestone-accent{ display:none; }
 .lightbox-close{
   all:unset; position:absolute; top:max(16px, env(safe-area-inset-top)); right:16px;
   width:44px; height:44px; border-radius:50%; cursor:pointer; z-index:1;
-  background:rgba(255,255,255,.15); color:#fff; font-size:1.8rem; line-height:1;
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(var(--glass-blur-xs)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-xs)) saturate(var(--glass-saturate));
+  border:1px solid var(--glass-border-subtle);
+  color:#fff; font-size:1.8rem; line-height:1;
   display:flex; align-items:center; justify-content:center;
+  box-sizing:border-box;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .lightbox-close{ background:rgba(255,255,255,.15); border:none; }
 }
 .lightbox-close:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
 body.reduced-motion .lightbox,
@@ -371,10 +415,15 @@ body.reduced-motion .lightbox video{ transition:none; }
   padding:.75rem; text-align:center;
 }
 .flip-front{
-  background:linear-gradient(165deg, #ffffff, var(--cream));
+  background:rgba(255,255,255,.42);
+  backdrop-filter:blur(var(--glass-blur-md)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-md)) saturate(var(--glass-saturate));
   box-shadow:0 14px 34px -16px rgba(92,58,62,.35);
-  border:1px solid rgba(183,110,121,.18);
+  border:1px solid var(--glass-border);
   gap:.3rem;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .flip-front{ background:linear-gradient(165deg, #ffffff, var(--cream)); border:1px solid rgba(183,110,121,.18); }
 }
 .flip-front .flip-icon{ font-size:1.7rem; line-height:1; filter:drop-shadow(0 2px 3px rgba(92,58,62,.15)); }
 .flip-front .num{ font-family:var(--font-display); font-weight:700; color:var(--rose-gold-text); font-size:1.3rem; }
@@ -406,9 +455,15 @@ body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
 .quiz-question{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; text-align:center; margin:0 0 1.5rem; }
 .quiz-options{ display:flex; flex-direction:column; gap:.7rem; }
 .quiz-option{
-  background:#fff; border:1.5px solid rgba(183,110,121,.3); border-radius:14px;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-blur-sm)) saturate(var(--glass-saturate));
+  border:1.5px solid rgba(183,110,121,.3); border-radius:14px;
   padding:.85rem 1rem; min-height:44px; font-size:.95rem; text-align:left; color:var(--mauve);
   transition:background .25s ease, border-color .25s ease, opacity .25s ease;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .quiz-option{ background:#fff; }
 }
 .quiz-option:disabled{ pointer-events:none; }
 .quiz-option.correct{ background:var(--rose-gold-deep); border-color:var(--rose-gold-deep); color:#fff; font-weight:600; }
