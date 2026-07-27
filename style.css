@@ -129,8 +129,8 @@ body.reduced-motion .reveal{ transform:none; transition:opacity .9s ease; }
    contrast is unaffected; only the photo peeking through underneath it is new. */
 .envelope-bg-photo{
   position:absolute; inset:-26px; z-index:0;
-  background:url('photos/story-2-first-meeting.jpg') center 35% / cover no-repeat;
-  filter:blur(10px);
+  background:url('photos/story-2-first-meeting.jpg') 65% 30% / cover no-repeat;
+  filter:blur(5px);
 }
 .envelope-bg-tint{
   position:absolute; inset:0; z-index:1;
