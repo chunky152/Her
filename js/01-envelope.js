@@ -1,5 +1,4 @@
-(function(){
-  "use strict";
+"use strict";
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reducedMotion){ document.body.classList.add('reduced-motion'); }

@@ -1,6 +1,5 @@
 // GENERATED FILE — edit the fragments in js/ instead, then run `npm run concat`.
-(function(){
-  "use strict";
+"use strict";
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reducedMotion){ document.body.classList.add('reduced-motion'); }
@@ -557,8 +556,16 @@
     lastThingBtn.disabled = true;
   });
   /* ================= Photo/video carousels + shared lightbox =================
-     Uses reducedMotion from 01-envelope.js. This is now the last fragment,
-     so it closes the outer IIFE opened at the top of 01-envelope.js. */
+     Uses reducedMotion from 01-envelope.js. Self-contained (own matched
+     IIFE) — the fragments no longer share one wrapper IIFE across files,
+     specifically so no file's syntax depends on a brace living in a
+     different file (that pattern kept getting silently broken by
+     per-file editor tooling, which has no visibility into the concat
+     step and treats a closing brace with no matching opener in the same
+     file as an error to auto-fix). Shared state (reducedMotion, bgMusic,
+     etc.) works anyway: script.js is one plain concatenated script, so
+     top-level var/function in any fragment is already global to all of
+     them — the wrapper was only ever for encapsulation, not correctness. */
   (function(){
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = document.getElementById('lightboxImg');
@@ -682,4 +689,3 @@
     initCarousel('birthdayCarouselTrack', 'birthdayCarouselDots', 'photo');
     initCarousel('funnyMomentsCarouselTrack', 'funnyMomentsCarouselDots', 'video');
   })();
-})();
