@@ -51,7 +51,7 @@
     teaser.textContent = item.teaser;
     var hint = document.createElement('span');
     hint.className = 'flip-hint';
-    hint.textContent = 'tap ✨';
+    hint.textContent = 'tap to reveal';
     front.appendChild(frontIcon);
     front.appendChild(teaser);
     front.appendChild(hint);
