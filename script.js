@@ -76,12 +76,15 @@
      Drop your track in as audio/background-music.mp3 (see README) — this just wires up
      the <audio id="bgMusic"> element in the page and controls it via the mute button. */
   var bgMusic = document.getElementById('bgMusic');
+  var bgMusicVolume = 0.55;
   var isPlaying = false;
-  bgMusic.volume = 0.55;
+  bgMusic.volume = bgMusicVolume;
 
   function applyMute(){
     bgMusic.muted = muted;
     envelopeSound.muted = muted;
+    var lbVideo = document.getElementById('lightboxVideo');
+    if(lbVideo){ lbVideo.muted = muted; }
   }
 
   function startMusic(){
@@ -89,6 +92,30 @@
     isPlaying = true;
     var playPromise = bgMusic.play();
     if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+  }
+
+  /* Generic volume fade, used to duck the background music when a Funny
+     Moments video plays its own audio (see 10-carousels.js). A shared
+     token means a new fade — on any element — always supersedes whatever
+     fade was previously in flight, so rapid open/close of the lightbox
+     can't leave stale rAF loops fighting over volume. */
+  var fadeToken = 0;
+  function fadeAudioVolume(audioEl, target, duration, onComplete){
+    var id = ++fadeToken;
+    var start = audioEl.volume;
+    var startTime = null;
+    function step(ts){
+      if(id !== fadeToken) return;
+      if(startTime === null){ startTime = ts; }
+      var t = Math.min((ts - startTime) / duration, 1);
+      audioEl.volume = start + (target - start) * t;
+      if(t < 1){
+        requestAnimationFrame(step);
+      } else if(onComplete){
+        onComplete();
+      }
+    }
+    requestAnimationFrame(step);
   }
   /* ================= Lottie motion graphics =================
      Uses reducedMotion from 01-envelope.js. Exposes playLottieOnce and
@@ -541,14 +568,42 @@
 
     var lastFocused = null;
 
+    /* Background music ducks out (and pauses) before a video's own audio
+       fades in, and fades back in once the video closes — never run for
+       photos, and skipped entirely while muted since there's nothing
+       audible to make room for. musicDucked guards closeLightbox so it
+       only touches bgMusic when a video actually ducked it. */
+    var musicDucked = false;
+    function duckMusicForVideo(onDucked){
+      if(!isPlaying){ if(onDucked){ onDucked(); } return; }
+      musicDucked = true;
+      fadeAudioVolume(bgMusic, 0, 450, function(){
+        bgMusic.pause();
+        if(onDucked){ onDucked(); }
+      });
+    }
+    function restoreMusicAfterVideo(){
+      if(!musicDucked) return;
+      musicDucked = false;
+      var playPromise = bgMusic.play();
+      if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+      fadeAudioVolume(bgMusic, bgMusicVolume, 600);
+    }
+
     function openLightbox(media){
       lastFocused = document.activeElement;
       if(media.tagName === 'VIDEO'){
         lightboxVideo.src = media.currentSrc || media.src;
         lightboxVideo.classList.add('active');
         lightboxImg.classList.remove('active');
+        lightboxVideo.volume = muted ? 1 : 0;
         var playPromise = lightboxVideo.play();
         if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+        if(!muted){
+          duckMusicForVideo(function(){
+            fadeAudioVolume(lightboxVideo, 1, 400);
+          });
+        }
       } else {
         lightboxImg.src = media.currentSrc || media.src;
         lightboxImg.alt = media.alt;
@@ -566,6 +621,7 @@
       document.body.classList.remove('locked');
       lightboxVideo.pause();
       lightboxVideo.currentTime = 0;
+      restoreMusicAfterVideo();
       if(lastFocused && lastFocused.focus){ lastFocused.focus(); }
     }
 
@@ -626,5 +682,3 @@
     initCarousel('birthdayCarouselTrack', 'birthdayCarouselDots', 'photo');
     initCarousel('funnyMomentsCarouselTrack', 'funnyMomentsCarouselDots', 'video');
   })();
-
-})();

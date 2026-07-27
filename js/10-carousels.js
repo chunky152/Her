@@ -10,14 +10,42 @@
 
     var lastFocused = null;
 
+    /* Background music ducks out (and pauses) before a video's own audio
+       fades in, and fades back in once the video closes — never run for
+       photos, and skipped entirely while muted since there's nothing
+       audible to make room for. musicDucked guards closeLightbox so it
+       only touches bgMusic when a video actually ducked it. */
+    var musicDucked = false;
+    function duckMusicForVideo(onDucked){
+      if(!isPlaying){ if(onDucked){ onDucked(); } return; }
+      musicDucked = true;
+      fadeAudioVolume(bgMusic, 0, 450, function(){
+        bgMusic.pause();
+        if(onDucked){ onDucked(); }
+      });
+    }
+    function restoreMusicAfterVideo(){
+      if(!musicDucked) return;
+      musicDucked = false;
+      var playPromise = bgMusic.play();
+      if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+      fadeAudioVolume(bgMusic, bgMusicVolume, 600);
+    }
+
     function openLightbox(media){
       lastFocused = document.activeElement;
       if(media.tagName === 'VIDEO'){
         lightboxVideo.src = media.currentSrc || media.src;
         lightboxVideo.classList.add('active');
         lightboxImg.classList.remove('active');
+        lightboxVideo.volume = muted ? 1 : 0;
         var playPromise = lightboxVideo.play();
         if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+        if(!muted){
+          duckMusicForVideo(function(){
+            fadeAudioVolume(lightboxVideo, 1, 400);
+          });
+        }
       } else {
         lightboxImg.src = media.currentSrc || media.src;
         lightboxImg.alt = media.alt;
@@ -35,6 +63,7 @@
       document.body.classList.remove('locked');
       lightboxVideo.pause();
       lightboxVideo.currentTime = 0;
+      restoreMusicAfterVideo();
       if(lastFocused && lastFocused.focus){ lastFocused.focus(); }
     }
 
@@ -95,5 +124,3 @@
     initCarousel('birthdayCarouselTrack', 'birthdayCarouselDots', 'photo');
     initCarousel('funnyMomentsCarouselTrack', 'funnyMomentsCarouselDots', 'video');
   })();
-
-})();
