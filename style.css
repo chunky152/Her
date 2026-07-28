@@ -207,7 +207,20 @@ body.reduced-motion .wax-seal{ transition-delay:0s; }
   position:relative; min-height:100svh; min-height:100vh;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:center; overflow:hidden; padding:2rem 1.25rem;
+}
+/* A blurred birthday photo behind the very first thing she sees, same
+   photo-plus-tint trick as the envelope: the tint is the exact gradient
+   #hero used to have as a flat background, so nothing about the text's
+   contrast changes — the photo just adds warmth and depth underneath. */
+.hero-bg-photo{
+  position:absolute; inset:-26px; z-index:0;
+  background:url('photos/story-5-birthday-5-1.jpg') center 25% / cover no-repeat;
+  filter:blur(2px);
+}
+.hero-bg-tint{
+  position:absolute; inset:0; z-index:1;
   background:radial-gradient(circle at 50% 20%, var(--soft-pink), var(--blush) 65%);
+  opacity:.82;
 }
 #petals, .petals-layer{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
 .petal{
