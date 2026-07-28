@@ -43,7 +43,12 @@
 
   function renderQuestion(){
     var item = quizData[qIndex];
-    var html = '<p class="quiz-progress">Question ' + (qIndex + 1) + ' of ' + quizData.length + '</p>';
+    var dots = quizData.map(function(_, i){
+      var cls = i < qIndex ? 'done' : (i === qIndex ? 'active' : '');
+      return '<span class="quiz-progress-dot ' + cls + '"></span>';
+    }).join('');
+    var html = '<div class="quiz-progress-dots" aria-hidden="true">' + dots + '</div>';
+    html += '<p class="quiz-progress">Question ' + (qIndex + 1) + ' of ' + quizData.length + '</p>';
     html += '<h3 class="quiz-question">' + item.q + '</h3>';
     html += '<div class="quiz-options">';
     item.options.forEach(function(opt, i){

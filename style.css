@@ -511,6 +511,14 @@ body.reduced-motion .flip-card.flipped .flip-back{ opacity:1; }
 
 /* ================= Quiz ================= */
 #quiz{ background:linear-gradient(180deg, var(--cream), var(--soft-pink)); }
+.quiz-progress-dots{ display:flex; justify-content:center; gap:.4rem; margin-bottom:.6rem; }
+.quiz-progress-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(183,110,121,.28);
+  transition:background .25s ease, transform .25s ease;
+}
+.quiz-progress-dot.done{ background:var(--rose-gold); }
+.quiz-progress-dot.active{ background:var(--rose-gold-deep); transform:scale(1.4); }
 .quiz-progress{ font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rose-gold-text); margin-bottom:.75rem; text-align:center; }
 .quiz-question{ font-family:var(--font-display); font-weight:600; font-size:1.3rem; text-align:center; margin:0 0 1.5rem; }
 .quiz-options{ display:flex; flex-direction:column; gap:.7rem; }
