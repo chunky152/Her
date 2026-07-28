@@ -269,7 +269,23 @@ body.reduced-motion .scroll-cue span{ animation:none; }
 /* ================= Letter ================= */
 #letter{ background:linear-gradient(180deg, var(--blush), var(--cream)); }
 .letter-text p{ margin:0 0 1.1rem; font-size:1.02rem; }
-.letter-text{ font-size:1.02rem; color:var(--mauve); }
+.letter-text{ font-size:1.02rem; color:var(--mauve); position:relative; }
+/* A decorative opening quote and a dropped first letter — small touches
+   that make the card read as a crafted letter instead of a plain block
+   of paragraphs. Both are presentational only — a single low-opacity
+   punctuation glyph and ::first-letter styling, neither read as content
+   by screen readers — no effect on the letter's actual text. */
+.letter-text::before{
+  content:'\201C';
+  position:absolute; top:.1rem; left:1.1rem;
+  font-family:var(--font-display); font-size:4.5rem; font-style:italic; font-weight:700;
+  color:var(--rose-gold); opacity:.22; line-height:1; pointer-events:none;
+}
+.letter-text p:first-of-type::first-letter{
+  font-family:var(--font-display); font-style:italic; font-weight:700;
+  font-size:2.3rem; line-height:.75; color:var(--rose-gold-text);
+  float:left; margin:.06em .15em 0 0;
+}
 .letter-sign{
   text-align:right; font-family:var(--font-display); font-style:italic; font-weight:600;
   margin-top:1.5rem; color:var(--rose-gold-text); font-size:1.05rem;
@@ -420,11 +436,14 @@ body.reduced-motion .lightbox img,
 body.reduced-motion .lightbox video{ transition:none; }
 
 /* ================= Reasons ================= */
-#reasons{ background:linear-gradient(180deg, var(--soft-pink), var(--cream)); }
+/* Radial rather than flat linear — same palette, but the story→reasons
+   scroll stretch (all plain gradient, no photo/decoration) reads as a
+   considered moment instead of another flat pastel wash. */
+#reasons{ background:radial-gradient(ellipse 140% 60% at 50% 0%, var(--soft-pink), var(--cream) 70%); }
 .reasons-intro{
   margin:0 auto; max-width:340px; font-size:.98rem; color:var(--mauve); opacity:.85;
 }
-.reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2rem; }
+.reasons-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:1.25rem; }
 .flip-card{ flex:0 1 calc(50% - .5rem); perspective:1000px; min-height:150px; }
 @media (min-width:700px){
   .flip-card{ flex-basis:calc(20% - .8rem); }
