@@ -1,7 +1,13 @@
 // Service worker for offline support. Bump VERSION on any deploy that
 // changes precached files so old caches get cleaned up on activate.
-const VERSION = 'v1';
+const VERSION = 'v5';
 const CACHE_NAME = `her-cache-${VERSION}`;
+// Photos/audio/video are dropped in per README and lazily runtime-cached
+// (see fetch handler) rather than precached, so unlike the app shell above
+// they aren't a fixed known set — kept in their own cache with a size cap
+// so a growing media collection can't cache-bloat the device indefinitely.
+const MEDIA_CACHE_NAME = `her-media-${VERSION}`;
+const MAX_MEDIA_ENTRIES = 30;
 
 // Only files guaranteed to exist in the repo — photos/audio are dropped in
 // per README and may be missing or placeholders, so they're left out here
@@ -16,6 +22,10 @@ const PRECACHE_URLS = [
   'icon-512.png',
   'apple-touch-icon.png',
   'vendor/lottie.min.js',
+  'fonts/playfair-display-variable.woff2',
+  'fonts/playfair-display-italic-variable.woff2',
+  'fonts/mulish-variable.woff2',
+  'fonts/caveat-variable.woff2',
   'animations/bird-pair-love.svg',
   'animations/cute-mascot-jumping.svg',
   'animations/happy-ball-throw.svg',
@@ -43,26 +53,43 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys.filter((key) => key !== CACHE_NAME && key !== MEDIA_CACHE_NAME).map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
 });
 
+// Deletes the oldest entries (cache.keys() is insertion-ordered) once a
+// cache grows past maxEntries, so MEDIA_CACHE_NAME can't grow without bound.
+async function trimCache(cacheName, maxEntries){
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  const excess = keys.length - maxEntries;
+  if (excess <= 0) return;
+  await Promise.all(keys.slice(0, excess).map((key) => cache.delete(key)));
+}
+
 // Stale-while-revalidate: serve from cache instantly when we have it, while
 // refreshing the cache in the background so later visits pick up changes
 // (new photos, rebuilt script.js, etc). Anything not yet cached falls back
-// to the network and gets cached for next time.
+// to the network and gets cached for next time. Photos/audio go in the
+// capped MEDIA_CACHE_NAME; everything else (the fixed app shell) in CACHE_NAME.
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
 
+  const isMedia = /\/(?:photos|audio)\//.test(new URL(request.url).pathname);
+  const cacheName = isMedia ? MEDIA_CACHE_NAME : CACHE_NAME;
+
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    caches.open(cacheName).then(async (cache) => {
       const cached = await cache.match(request);
 
       const networkFetch = fetch(request).then((response) => {
-        if (response && response.ok) cache.put(request, response.clone());
+        if (response && response.ok) {
+          cache.put(request, response.clone());
+          if (isMedia) trimCache(MEDIA_CACHE_NAME, MAX_MEDIA_ENTRIES);
+        }
         return response;
       }).catch(() => null);
 

@@ -78,8 +78,25 @@
     lightbox.addEventListener('click', closeLightbox);
     lightboxVideo.addEventListener('click', function(e){ e.stopPropagation(); });
     lightboxClose.addEventListener('click', function(e){ e.stopPropagation(); closeLightbox(); });
+
+    /* Focus trap: body.locked only stops scrolling, so without this Tab
+       would walk focus straight into the page behind the modal. Only
+       lightboxClose and (when active) lightboxVideo are ever focusable
+       here — the inactive image/video is display:none via CSS and so
+       already out of tab order on its own. */
     document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && lightbox.classList.contains('show')){ closeLightbox(); }
+      if(!lightbox.classList.contains('show')) return;
+      if(e.key === 'Escape'){ closeLightbox(); return; }
+      if(e.key !== 'Tab') return;
+      var focusables = Array.prototype.slice.call(lightbox.querySelectorAll('button, video[controls]'))
+        .filter(function(el){ return el.offsetParent !== null; });
+      if(!focusables.length) return;
+      var first = focusables[0], last = focusables[focusables.length - 1];
+      if(e.shiftKey && document.activeElement === first){
+        e.preventDefault(); last.focus();
+      } else if(!e.shiftKey && document.activeElement === last){
+        e.preventDefault(); first.focus();
+      }
     });
 
     /* One carousel instance per (trackId, dotsId, dotLabel) — builds the dot
@@ -108,11 +125,13 @@
       var dots = dotsWrap.querySelectorAll('.carousel-dot');
       if(dots.length){ dots[0].classList.add('active'); }
 
+      var activeIndex = 0;
       if('IntersectionObserver' in window){
         var dotIo = new IntersectionObserver(function(entries){
           entries.forEach(function(entry){
             var idx = slides.indexOf(entry.target);
             if(entry.isIntersecting && idx > -1){
+              activeIndex = idx;
               dots.forEach(function(d){ d.classList.remove('active'); });
               dots[idx].classList.add('active');
             }
@@ -120,6 +139,17 @@
         }, { root: track, threshold: 0.6 });
         slides.forEach(function(s){ dotIo.observe(s); });
       }
+
+      /* track has tabindex="0" (see index.html) specifically so this works —
+         arrow keys are otherwise only a native scroll gesture on a focused
+         scroll container, not a slide-to-slide one. */
+      track.addEventListener('keydown', function(e){
+        if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        var next = activeIndex + (e.key === 'ArrowRight' ? 1 : -1);
+        if(next < 0 || next >= slides.length) return;
+        e.preventDefault();
+        slides[next].scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+      });
 
       track.querySelectorAll('.polaroid-photo-btn').forEach(function(btn){
         btn.addEventListener('click', function(){

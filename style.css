@@ -1,3 +1,37 @@
+/* Self-hosted (downloaded from Google Fonts) so the service worker can
+   precache them — otherwise the first offline visit falls back to system
+   fonts until a font request has been made online at least once. Each
+   family ships as a single variable-weight woff2, so one @font-face per
+   style covers the whole weight range actually used on the page. */
+@font-face{
+  font-family:'Playfair Display';
+  font-style:normal;
+  font-weight:500 700;
+  font-display:swap;
+  src:url('fonts/playfair-display-variable.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Playfair Display';
+  font-style:italic;
+  font-weight:500 700;
+  font-display:swap;
+  src:url('fonts/playfair-display-italic-variable.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Mulish';
+  font-style:normal;
+  font-weight:300 700;
+  font-display:swap;
+  src:url('fonts/mulish-variable.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Caveat';
+  font-style:normal;
+  font-weight:500 700;
+  font-display:swap;
+  src:url('fonts/caveat-variable.woff2') format('woff2');
+}
+
 :root{
   --blush:#FDF3F0;
   --soft-pink:#F6D7D2;
@@ -627,6 +661,12 @@ body.reduced-motion .replay-btn{ transform:none; }
   width:130px; height:130px; pointer-events:none; z-index:6; opacity:0;
 }
 .lottie-quiz-check.show{ opacity:1; }
+.lottie-quiz-perfect{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:min(90vw,320px); height:min(90vw,320px); pointer-events:none; z-index:6; opacity:0;
+  transition:opacity .5s ease;
+}
+.lottie-quiz-perfect.show{ opacity:1; }
 .lottie-finale-burst{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   width:min(90vw,480px); height:min(90vw,480px); pointer-events:none; z-index:3;
@@ -641,6 +681,7 @@ body.reduced-motion .lottie-envelope-burst,
 body.reduced-motion .lottie-reasons-hearts,
 body.reduced-motion .lottie-finale-burst,
 body.reduced-motion .lottie-reasons-complete,
+body.reduced-motion .lottie-quiz-perfect,
 body.reduced-motion .quiz-mascot{ display:none; }
 
 /* ================= Reasons: completion reward ================= */

@@ -27,14 +27,17 @@ js/            The real source: one focused file per feature (envelope, audio, l
                petals, polaroid, reasons, reveals, quiz, pwa), concatenated in that
                order into script.js
 manifest.json  Web app manifest (name, icons, colors) for "Add to Home Screen"
-sw.js          Service worker: precaches the app shell, caches photos/audio/fonts on
-               first view so later visits work offline
+sw.js          Service worker: precaches the app shell (including fonts), caches
+               photos/audio the first time they're requested so later visits work offline
 icon-192.png,
 icon-512.png   PWA install icons, derived from apple-touch-icon.png
 photos/        Drop real photos/videos here for the "Our Story" polaroids
 audio/         Drop your background-music.mp3 and envelope-open.mp3 here
 animations/    Hand-built Lottie JSON motion graphics (hearts, checkmark, sparkle burst)
 vendor/        Vendored lottie-web player (vendor/lottie.min.js)
+fonts/         Self-hosted Playfair Display/Mulish/Caveat woff2 files (downloaded from
+               Google Fonts) so the service worker can precache real typography instead
+               of falling back to system fonts on the first offline visit
 ```
 
 Editing behavior? Change the relevant file in `js/`, then run `npm run concat` to regenerate
@@ -74,7 +77,7 @@ Drop a short paper/envelope-opening sound in as `audio/envelope-open.mp3` and it
 
 ## Progressive Web App
 
-The site registers `sw.js` on load (`js/11-pwa.js`), which precaches the app shell (HTML/CSS/JS, icons, Lottie animations) on first visit, then caches photos, audio, and fonts the first time they're requested. Once she's opened it once, it keeps working with no signal.
+The site registers `sw.js` on load (`js/11-pwa.js`), which precaches the app shell (HTML/CSS/JS, icons, Lottie animations, fonts) on first visit, then caches photos and audio the first time they're requested. Once she's opened it once, it keeps working with no signal.
 
 `manifest.json` makes it installable — on Android, Chrome offers "Add to Home Screen" automatically; on iOS, Safari's share sheet has "Add to Home Screen" (using the existing `apple-touch-icon.png`). Both use `start_url`/`scope` of `"."`, which resolves relative to wherever the site is hosted, so this works unchanged on both the GitHub Pages `/Her/` subpath and a Netlify root domain.
 

@@ -26,7 +26,7 @@
       q: "How many siblings do I have?",
       options: ["1", "20", "0", "11"],
       correct: 3,
-      right: "Exacly! I come from quite the crew.",
+      right: "Exactly! I come from quite the crew.",
       wrong: "Not quite — Maybe you should ask me."
     },
     {
@@ -86,10 +86,18 @@
 
     buttons.forEach(function(b){
       var bi = parseInt(b.getAttribute('data-i'), 10);
+      var label = item.options[bi];
       b.disabled = true;
-      if(bi === item.correct){ b.classList.add('correct'); }
-      else if(bi === i){ b.classList.add('wrong'); if(!correct){ b.classList.add('shake'); } }
-      else { b.classList.add('dim'); }
+      if(bi === item.correct){
+        b.classList.add('correct');
+        b.setAttribute('aria-label', label + ' — correct answer');
+      } else if(bi === i){
+        b.classList.add('wrong');
+        if(!correct){ b.classList.add('shake'); }
+        b.setAttribute('aria-label', label + ' — your answer, incorrect');
+      } else {
+        b.classList.add('dim');
+      }
     });
 
     var feedback = stageInner.querySelector('.quiz-feedback');
@@ -117,6 +125,12 @@
       '<p class="quiz-progress">Your score</p>' +
       '<p class="quiz-result-score">' + score + ' / ' + quizData.length + '</p>' +
       '<p class="quiz-result-msg">' + msg + '</p>';
+
+    if(score === quizData.length){
+      playLottieOnce('lottieQuizPerfect', 'animations/sparkle-burst.json');
+      var perfectEl = document.getElementById('lottieQuizPerfect');
+      if(perfectEl){ perfectEl.classList.add('show'); }
+    }
   }
 
   renderQuestion();
