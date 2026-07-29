@@ -1,10 +1,9 @@
 name: Deploy to GitHub Pages
 
-# Manual-only: GitHub Pages doesn't work on a private repo without a paid
-# plan, and Netlify now handles deploys from this repo instead. Re-enable
-# the `push` trigger below if the repo goes public again or Pages access
-# is otherwise restored.
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
