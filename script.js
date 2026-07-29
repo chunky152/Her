@@ -1,6 +1,12 @@
 // GENERATED FILE — edit the fragments in js/ instead, then run `npm run concat`.
 "use strict";
 
+  /* Chrome/Firefox restore the previous scroll position on reload by
+     default, which would undo the point of the finale's "Watch it again"
+     button (see 09-finale.js) — it needs a reload to land back at the top,
+     on a closed envelope. */
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reducedMotion){ document.body.classList.add('reduced-motion'); }
 
@@ -604,11 +610,24 @@
 
   var lastThingBtn = document.getElementById('lastThingBtn');
   var finalLine = document.getElementById('finalLine');
+  var replayBtn = document.getElementById('replayBtn');
   lastThingBtn.addEventListener('click', function(){
     launchConfetti();
     playLottieOnce('lottieFinaleBurst', 'animations/finale-burst.json');
     finalLine.classList.add('show');
     lastThingBtn.disabled = true;
+    replayBtn.classList.add('show');
+  });
+
+  /* Full replay of the envelope-to-finale arc. Reasons/quiz/reveals/carousels
+     all hold one-shot state (flipped cards, fired IntersectionObservers,
+     disabled buttons) with no exposed reset — a reload is the only way to
+     get back to a clean envelope-closed start without re-threading reset
+     logic through every section. scrollRestoration is set to 'manual' in
+     01-envelope.js specifically so this lands at the top instead of
+     wherever she was scrolled to. */
+  replayBtn.addEventListener('click', function(){
+    location.reload();
   });
   /* ================= Photo/video carousels + shared lightbox =================
      Uses reducedMotion from 01-envelope.js. Self-contained (own matched

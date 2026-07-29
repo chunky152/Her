@@ -600,6 +600,15 @@ body.reduced-motion .final-line{ transform:none; }
   position:relative; z-index:2; transition:opacity .3s ease;
 }
 .btn-primary:disabled{ opacity:.6; }
+.replay-btn{
+  display:block; margin:1.6rem auto 0; background:none; border:none;
+  font-family:var(--font-body); font-size:.9rem; font-weight:600; letter-spacing:.02em;
+  color:var(--rose-gold-text); opacity:0; transform:translateY(10px); cursor:pointer;
+  transition:opacity .8s ease, transform .8s ease; position:relative; z-index:2;
+}
+.replay-btn.show{ opacity:.85; transform:none; }
+.replay-btn:hover, .replay-btn:focus-visible{ opacity:1; text-decoration:underline; }
+body.reduced-motion .replay-btn{ transform:none; }
 
 /* ================= Lottie motion graphics ================= */
 .lottie-envelope-burst{

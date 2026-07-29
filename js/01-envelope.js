@@ -1,5 +1,11 @@
 "use strict";
 
+  /* Chrome/Firefox restore the previous scroll position on reload by
+     default, which would undo the point of the finale's "Watch it again"
+     button (see 09-finale.js) — it needs a reload to land back at the top,
+     on a closed envelope. */
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reducedMotion){ document.body.classList.add('reduced-motion'); }
 
