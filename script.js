@@ -65,15 +65,32 @@
   /* ================= Mute button =================
      Uses envelopeSound from 01-envelope.js. Icon markup is duplicated in
      index.html (unmuted, the default state) so it doesn't need to wait for
-     JS to render on first paint. */
+     JS to render on first paint.
+     Persisted in localStorage so the "Watch it again" reload (see
+     09-finale.js) doesn't silently un-mute the music. */
+  var MUTE_STORAGE_KEY = 'her-muted';
+  function readStoredMute(){
+    try { return localStorage.getItem(MUTE_STORAGE_KEY) === '1'; }
+    catch(e){ return false; }
+  }
+  function writeStoredMute(value){
+    try { localStorage.setItem(MUTE_STORAGE_KEY, value ? '1' : '0'); }
+    catch(e){ /* private browsing, storage disabled, etc — just skip persisting */ }
+  }
+
   var muteBtn = document.getElementById('muteBtn');
-  var muted = false;
+  var muted = readStoredMute();
   var speakerIcon = '<svg viewBox="0 0 20 16" fill="none" aria-hidden="true"><path d="M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z" fill="#fff"/><path d="M11,5 Q13.5,8 11,11" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><path d="M13,3 Q17,8 13,13" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
   var mutedIcon = '<svg viewBox="0 0 20 16" fill="none" aria-hidden="true"><path d="M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z" fill="#fff"/><path d="M12,5 L17,11 M17,5 L12,11" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  if(muted){
+    muteBtn.innerHTML = mutedIcon;
+    muteBtn.setAttribute('aria-label', 'Unmute music');
+  }
   muteBtn.addEventListener('click', function(){
     muted = !muted;
     muteBtn.innerHTML = muted ? mutedIcon : speakerIcon;
     muteBtn.setAttribute('aria-label', muted ? 'Unmute music' : 'Mute music');
+    writeStoredMute(muted);
     applyMute();
   });
 
@@ -91,6 +108,7 @@
     var lbVideo = document.getElementById('lightboxVideo');
     if(lbVideo){ lbVideo.muted = muted; }
   }
+  applyMute();
 
   function startMusic(){
     if(isPlaying) return;
@@ -308,12 +326,14 @@
     var btn = document.createElement('button');
     btn.className = 'flip-card-btn';
     btn.setAttribute('aria-label', 'Reveal reason ' + (idx + 1));
+    btn.setAttribute('aria-pressed', 'false');
 
     var inner = document.createElement('div');
     inner.className = 'flip-inner';
 
     var front = document.createElement('div');
     front.className = 'flip-front';
+    front.setAttribute('aria-hidden', 'false');
     var frontIcon = document.createElement('span');
     frontIcon.className = 'flip-icon';
     frontIcon.textContent = item.icon;
@@ -329,6 +349,7 @@
 
     var back = document.createElement('div');
     back.className = 'flip-back';
+    back.setAttribute('aria-hidden', 'true');
     var backIcon = document.createElement('span');
     backIcon.className = 'flip-icon back-icon';
     backIcon.textContent = item.icon;
@@ -345,8 +366,14 @@
     reasonsGrid.appendChild(card);
 
     btn.addEventListener('click', function(){
-      card.classList.toggle('flipped');
-      if(card.classList.contains('flipped') && !reasonsFlipped[idx]){
+      var revealed = card.classList.toggle('flipped');
+      front.setAttribute('aria-hidden', revealed ? 'true' : 'false');
+      back.setAttribute('aria-hidden', revealed ? 'false' : 'true');
+      btn.setAttribute('aria-pressed', revealed ? 'true' : 'false');
+      btn.setAttribute('aria-label', revealed
+        ? ('Reason ' + (idx + 1) + ': ' + item.teaser + ' — ' + item.text + '. Tap to hide.')
+        : ('Reveal reason ' + (idx + 1)));
+      if(revealed && !reasonsFlipped[idx]){
         reasonsFlipped[idx] = true;
         reasonsFlippedCount++;
         checkReasonsComplete();
@@ -446,7 +473,7 @@
       q: "How many siblings do I have?",
       options: ["1", "20", "0", "11"],
       correct: 3,
-      right: "Exacly! I come from quite the crew.",
+      right: "Exactly! I come from quite the crew.",
       wrong: "Not quite — Maybe you should ask me."
     },
     {
@@ -506,10 +533,18 @@
 
     buttons.forEach(function(b){
       var bi = parseInt(b.getAttribute('data-i'), 10);
+      var label = item.options[bi];
       b.disabled = true;
-      if(bi === item.correct){ b.classList.add('correct'); }
-      else if(bi === i){ b.classList.add('wrong'); if(!correct){ b.classList.add('shake'); } }
-      else { b.classList.add('dim'); }
+      if(bi === item.correct){
+        b.classList.add('correct');
+        b.setAttribute('aria-label', label + ' — correct answer');
+      } else if(bi === i){
+        b.classList.add('wrong');
+        if(!correct){ b.classList.add('shake'); }
+        b.setAttribute('aria-label', label + ' — your answer, incorrect');
+      } else {
+        b.classList.add('dim');
+      }
     });
 
     var feedback = stageInner.querySelector('.quiz-feedback');
@@ -537,6 +572,12 @@
       '<p class="quiz-progress">Your score</p>' +
       '<p class="quiz-result-score">' + score + ' / ' + quizData.length + '</p>' +
       '<p class="quiz-result-msg">' + msg + '</p>';
+
+    if(score === quizData.length){
+      playLottieOnce('lottieQuizPerfect', 'animations/sparkle-burst.json');
+      var perfectEl = document.getElementById('lottieQuizPerfect');
+      if(perfectEl){ perfectEl.classList.add('show'); }
+    }
   }
 
   renderQuestion();
@@ -709,8 +750,25 @@
     lightbox.addEventListener('click', closeLightbox);
     lightboxVideo.addEventListener('click', function(e){ e.stopPropagation(); });
     lightboxClose.addEventListener('click', function(e){ e.stopPropagation(); closeLightbox(); });
+
+    /* Focus trap: body.locked only stops scrolling, so without this Tab
+       would walk focus straight into the page behind the modal. Only
+       lightboxClose and (when active) lightboxVideo are ever focusable
+       here — the inactive image/video is display:none via CSS and so
+       already out of tab order on its own. */
     document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && lightbox.classList.contains('show')){ closeLightbox(); }
+      if(!lightbox.classList.contains('show')) return;
+      if(e.key === 'Escape'){ closeLightbox(); return; }
+      if(e.key !== 'Tab') return;
+      var focusables = Array.prototype.slice.call(lightbox.querySelectorAll('button, video[controls]'))
+        .filter(function(el){ return el.offsetParent !== null; });
+      if(!focusables.length) return;
+      var first = focusables[0], last = focusables[focusables.length - 1];
+      if(e.shiftKey && document.activeElement === first){
+        e.preventDefault(); last.focus();
+      } else if(!e.shiftKey && document.activeElement === last){
+        e.preventDefault(); first.focus();
+      }
     });
 
     /* One carousel instance per (trackId, dotsId, dotLabel) — builds the dot
@@ -739,11 +797,13 @@
       var dots = dotsWrap.querySelectorAll('.carousel-dot');
       if(dots.length){ dots[0].classList.add('active'); }
 
+      var activeIndex = 0;
       if('IntersectionObserver' in window){
         var dotIo = new IntersectionObserver(function(entries){
           entries.forEach(function(entry){
             var idx = slides.indexOf(entry.target);
             if(entry.isIntersecting && idx > -1){
+              activeIndex = idx;
               dots.forEach(function(d){ d.classList.remove('active'); });
               dots[idx].classList.add('active');
             }
@@ -751,6 +811,17 @@
         }, { root: track, threshold: 0.6 });
         slides.forEach(function(s){ dotIo.observe(s); });
       }
+
+      /* track has tabindex="0" (see index.html) specifically so this works —
+         arrow keys are otherwise only a native scroll gesture on a focused
+         scroll container, not a slide-to-slide one. */
+      track.addEventListener('keydown', function(e){
+        if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        var next = activeIndex + (e.key === 'ArrowRight' ? 1 : -1);
+        if(next < 0 || next >= slides.length) return;
+        e.preventDefault();
+        slides[next].scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+      });
 
       track.querySelectorAll('.polaroid-photo-btn').forEach(function(btn){
         btn.addEventListener('click', function(){

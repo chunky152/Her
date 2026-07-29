@@ -27,9 +27,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AMAHLE">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Mulish:wght@300;400;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -129,7 +126,7 @@
       <h3 class="milestone-title">Funny Moments <span class="laugh-emoji" aria-hidden="true">😂</span></h3>
       <p class="milestone-text">You'd send me videos of yourself dancing 💃, and every single time, I couldn't stop laughing. You have a way of making me happy without even trying.</p>
       <div class="polaroid-carousel" id="funnyMomentsCarousel">
-        <div class="polaroid-carousel-track" id="funnyMomentsCarouselTrack">
+        <div class="polaroid-carousel-track" id="funnyMomentsCarouselTrack" tabindex="0" role="region" aria-label="Funny moments videos, use the left and right arrow keys to browse">
           <div class="polaroid video-polaroid carousel-slide">
             <div class="polaroid-photo">
               <button type="button" class="polaroid-photo-btn" aria-label="Play video">
@@ -189,7 +186,7 @@
       <p class="milestone-text">Today I celebrate you. May God add blessings and value to your life. I looovveeee yyyyyyooooooouuuuuuu 🥰.</p>
       <img src="animations/cute-mascot-jumping.svg" class="milestone-accent" alt="" aria-hidden="true">
       <div class="polaroid-carousel" id="birthdayCarousel">
-        <div class="polaroid-carousel-track" id="birthdayCarouselTrack">
+        <div class="polaroid-carousel-track" id="birthdayCarouselTrack" tabindex="0" role="region" aria-label="Birthday photos, use the left and right arrow keys to browse">
           <div class="polaroid carousel-slide">
             <div class="polaroid-photo">
               <button type="button" class="polaroid-photo-btn" aria-label="View larger photo">
@@ -260,6 +257,7 @@
   <div class="card reveal" id="quizCard" style="position:relative;">
     <div id="quizStage"></div>
     <div id="lottieQuizCheck" class="lottie-quiz-check" aria-hidden="true"></div>
+    <div id="lottieQuizPerfect" class="lottie-quiz-perfect" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -277,7 +275,7 @@
 </section>
 
 <!-- ============ Photo lightbox ============ -->
-<div class="lightbox" id="lightbox" aria-hidden="true">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
   <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
   <img src="" alt="" id="lightboxImg">
   <video id="lightboxVideo" playsinline controls></video>
