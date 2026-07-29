@@ -15,6 +15,7 @@ Live structure: **HTML / CSS / vanilla JS**, no framework. `npm run build` runs 
 - **A little quiz** about the relationship, with a checkmark-burst animation on correct answers, a shake on wrong ones, and a scored result at the end.
 - **Finale** — a closing message with a canvas confetti burst plus a radiating hearts animation.
 - Scroll-reveal animations throughout, with a `prefers-reduced-motion` fallback that disables all motion (including the animations above).
+- **Installable + works offline** — a web app manifest and service worker let it be added to the home screen (`manifest.json`) and revisited without a signal (`sw.js`). See [Progressive Web App](#progressive-web-app).
 
 ## Project structure
 
@@ -23,8 +24,13 @@ index.html     Page markup
 style.css      All styling
 script.js      GENERATED — `npm run concat` builds this from js/*.js, don't edit directly
 js/            The real source: one focused file per feature (envelope, audio, lottie,
-               petals, polaroid, reasons, reveals, quiz, finale), concatenated in that
+               petals, polaroid, reasons, reveals, quiz, pwa), concatenated in that
                order into script.js
+manifest.json  Web app manifest (name, icons, colors) for "Add to Home Screen"
+sw.js          Service worker: precaches the app shell, caches photos/audio/fonts on
+               first view so later visits work offline
+icon-192.png,
+icon-512.png   PWA install icons, derived from apple-touch-icon.png
 photos/        Drop real photos/videos here for the "Our Story" polaroids
 audio/         Drop your background-music.mp3 and envelope-open.mp3 here
 animations/    Hand-built Lottie JSON motion graphics (hearts, checkmark, sparkle burst)
@@ -65,6 +71,25 @@ If a file is missing, that slot shows a styled placeholder instead of a broken i
 Drop a single track in as `audio/background-music.mp3` and it plays automatically, looping through every section — no code changes needed. It starts when the envelope is tapped open (browsers require a user gesture before audio can play) and can be muted with the speaker button in the top corner. If the file is missing, the page just plays silently rather than breaking.
 
 Drop a short paper/envelope-opening sound in as `audio/envelope-open.mp3` and it plays once, right when the envelope is tapped open — the background music then starts as soon as that sound finishes. If the file is missing, the background music just starts immediately instead.
+
+## Progressive Web App
+
+The site registers `sw.js` on load (`js/11-pwa.js`), which precaches the app shell (HTML/CSS/JS, icons, Lottie animations) on first visit, then caches photos, audio, and fonts the first time they're requested. Once she's opened it once, it keeps working with no signal.
+
+`manifest.json` makes it installable — on Android, Chrome offers "Add to Home Screen" automatically; on iOS, Safari's share sheet has "Add to Home Screen" (using the existing `apple-touch-icon.png`). Both use `start_url`/`scope` of `"."`, which resolves relative to wherever the site is hosted, so this works unchanged on both the GitHub Pages `/Her/` subpath and a Netlify root domain.
+
+If you change `apple-touch-icon.png`, regenerate the manifest icons to match:
+
+```bash
+python3 -c "
+from PIL import Image
+im = Image.open('apple-touch-icon.png').convert('RGB')
+for size, name in [(192, 'icon-192.png'), (512, 'icon-512.png')]:
+    im.resize((size, size), Image.LANCZOS).save(name, optimize=True)
+"
+```
+
+If you add/rename files in `animations/` or the top-level app shell, update `PRECACHE_URLS` in `sw.js` and bump `VERSION` so returning visitors pick up the change (old caches are deleted automatically on activate).
 
 ## Customizing content
 
