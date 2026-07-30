@@ -277,14 +277,9 @@
     });
   }
   /* ================= Polaroid photo/video slots ================= */
-  document.querySelectorAll('.polaroid-photo img').forEach(function(img){
-    img.addEventListener('error', function(){
-      img.closest('.polaroid').classList.add('no-photo');
-    });
-  });
-  document.querySelectorAll('.polaroid-photo video').forEach(function(video){
-    video.addEventListener('error', function(){
-      video.closest('.polaroid').classList.add('no-photo');
+  document.querySelectorAll('.polaroid-photo img, .polaroid-photo video').forEach(function(media){
+    media.addEventListener('error', function(){
+      media.closest('.polaroid').classList.add('no-photo');
     });
   });
   /* ================= Reasons: flip cards =================
@@ -318,52 +313,38 @@
     }
   }
 
-  reasons.forEach(function(item, idx){
-    var card = document.createElement('div');
-    card.className = 'flip-card reveal';
+  function makeEl(tag, className, text){
+    var node = document.createElement(tag);
+    if(className){ node.className = className; }
+    if(text != null){ node.textContent = text; }
+    return node;
+  }
+
+  function buildReasonCard(item, idx){
+    var card = makeEl('div', 'flip-card reveal');
     card.style.transitionDelay = (idx * 90) + 'ms';
 
-    var btn = document.createElement('button');
-    btn.className = 'flip-card-btn';
+    var btn = makeEl('button', 'flip-card-btn');
     btn.setAttribute('aria-label', 'Reveal reason ' + (idx + 1));
     btn.setAttribute('aria-pressed', 'false');
 
-    var inner = document.createElement('div');
-    inner.className = 'flip-inner';
+    var inner = makeEl('div', 'flip-inner');
 
-    var front = document.createElement('div');
-    front.className = 'flip-front';
+    var front = makeEl('div', 'flip-front');
     front.setAttribute('aria-hidden', 'false');
-    var frontIcon = document.createElement('span');
-    frontIcon.className = 'flip-icon';
-    frontIcon.textContent = item.icon;
-    var teaser = document.createElement('span');
-    teaser.className = 'flip-teaser';
-    teaser.textContent = item.teaser;
-    var hint = document.createElement('span');
-    hint.className = 'flip-hint';
-    hint.textContent = 'tap to reveal';
-    front.appendChild(frontIcon);
-    front.appendChild(teaser);
-    front.appendChild(hint);
+    front.appendChild(makeEl('span', 'flip-icon', item.icon));
+    front.appendChild(makeEl('span', 'flip-teaser', item.teaser));
+    front.appendChild(makeEl('span', 'flip-hint', 'tap to reveal'));
 
-    var back = document.createElement('div');
-    back.className = 'flip-back';
+    var back = makeEl('div', 'flip-back');
     back.setAttribute('aria-hidden', 'true');
-    var backIcon = document.createElement('span');
-    backIcon.className = 'flip-icon back-icon';
-    backIcon.textContent = item.icon;
-    var backText = document.createElement('p');
-    backText.className = 'flip-text';
-    backText.textContent = item.text;
-    back.appendChild(backIcon);
-    back.appendChild(backText);
+    back.appendChild(makeEl('span', 'flip-icon back-icon', item.icon));
+    back.appendChild(makeEl('p', 'flip-text', item.text));
 
     inner.appendChild(front);
     inner.appendChild(back);
     btn.appendChild(inner);
     card.appendChild(btn);
-    reasonsGrid.appendChild(card);
 
     btn.addEventListener('click', function(){
       var revealed = card.classList.toggle('flipped');
@@ -379,6 +360,12 @@
         checkReasonsComplete();
       }
     });
+
+    return card;
+  }
+
+  reasons.forEach(function(item, idx){
+    reasonsGrid.appendChild(buildReasonCard(item, idx));
   });
   /* ================= Scroll reveals ================= */
   var revealEls = document.querySelectorAll('.reveal');
