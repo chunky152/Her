@@ -1,7 +1,7 @@
 // Service worker for offline support. VERSION is a hash of PRECACHE_URLS'
 // contents, auto-written by scripts/update-sw-version.js (run via `npm run
 // concat`/`build`) — don't hand-edit it, it'll just get overwritten.
-const VERSION = 'va5eff6ecdd';
+const VERSION = 'v4303726b02';
 const CACHE_NAME = `her-cache-${VERSION}`;
 // Photos/audio/video are dropped in per README and lazily runtime-cached
 // (see fetch handler) rather than precached, so unlike the app shell above
