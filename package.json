@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "concat": "printf '// GENERATED FILE — edit the fragments in js/ instead, then run `npm run concat`.\\n' > script.js && cat js/01-envelope.js js/02-audio.js js/03-lottie.js js/04-petals.js js/05-polaroid.js js/06-reasons.js js/07-reveals.js js/08-quiz.js js/09-finale.js js/10-carousels.js js/11-pwa.js >> script.js",
-    "build": "npm run concat && mkdir -p dist && html-minifier-terser --collapse-whitespace --remove-comments --remove-redundant-attributes --use-short-doctype --minify-css true --minify-js true -o dist/index.html index.html && cleancss -o dist/style.css style.css && terser script.js -c -m -o dist/script.js && cp -r photos dist/photos && cp -r audio dist/audio && cp -r vendor dist/vendor && cp -r animations dist/animations && cp apple-touch-icon.png dist/apple-touch-icon.png && cp icon-192.png dist/icon-192.png && cp icon-512.png dist/icon-512.png && cp manifest.json dist/manifest.json && cp sw.js dist/sw.js"
+    "build": "npm run concat && mkdir -p dist && html-minifier-terser --collapse-whitespace --remove-comments --remove-redundant-attributes --use-short-doctype --minify-css true --minify-js true -o dist/index.html index.html && cleancss -o dist/style.css style.css && terser script.js -c -m -o dist/script.js && cp -r photos dist/photos && cp -r audio dist/audio && cp -r vendor dist/vendor && cp -r animations dist/animations && cp -r fonts dist/fonts && cp apple-touch-icon.png dist/apple-touch-icon.png && cp icon-192.png dist/icon-192.png && cp icon-512.png dist/icon-512.png && cp manifest.json dist/manifest.json && cp sw.js dist/sw.js"
   },
   "devDependencies": {
     "html-minifier-terser": "^7.2.0",
