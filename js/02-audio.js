@@ -98,3 +98,22 @@ function handleVisibilityPause(){
 
 document.addEventListener('visibilitychange', handleVisibilityPause, false);
 window.addEventListener('pagehide', function(){ try{ bgMusic.pause(); }catch(e){}; isPlaying = false; }, false);
+
+// Additional handlers for mobile browsers that don't always fire
+// `visibilitychange` when the app is backgrounded or the device is locked.
+function pauseMusicIfPlaying(){
+  wasPlayingBeforeHidden = !bgMusic.paused && !bgMusic.muted;
+  try{ bgMusic.pause(); }catch(e){}
+  isPlaying = false;
+}
+function resumeMusicIfNeeded(){
+  if(wasPlayingBeforeHidden && !muted){ startMusic(); }
+  wasPlayingBeforeHidden = false;
+}
+
+window.addEventListener('blur', pauseMusicIfPlaying, false);
+window.addEventListener('focus', resumeMusicIfNeeded, false);
+document.addEventListener('webkitvisibilitychange', function(){ if(document.webkitHidden) pauseMusicIfPlaying(); else resumeMusicIfNeeded(); }, false);
+window.addEventListener('pageshow', resumeMusicIfNeeded, false);
+document.addEventListener('freeze', pauseMusicIfPlaying, false);
+document.addEventListener('resume', resumeMusicIfNeeded, false);
