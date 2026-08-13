@@ -76,3 +76,25 @@
     }
     requestAnimationFrame(step);
   }
+
+/* ===== Pause / resume on visibility changes =====
+   Pause background music when the page becomes hidden (tab switch,
+   minimize, phone lock). Remember whether it was playing so we can
+   resume when the page becomes visible again. */
+var wasPlayingBeforeHidden = false;
+function handleVisibilityPause(){
+  if(document.hidden){
+    // remember if music was actively playing (and not muted)
+    wasPlayingBeforeHidden = !bgMusic.paused && !bgMusic.muted;
+    try{ bgMusic.pause(); }catch(e){}
+    isPlaying = false;
+  } else {
+    if(wasPlayingBeforeHidden && !muted){
+      startMusic();
+    }
+    wasPlayingBeforeHidden = false;
+  }
+}
+
+document.addEventListener('visibilitychange', handleVisibilityPause, false);
+window.addEventListener('pagehide', function(){ try{ bgMusic.pause(); }catch(e){}; isPlaying = false; }, false);
